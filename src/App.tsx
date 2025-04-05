@@ -1,14 +1,16 @@
-import './App.css'
-import { Button } from './components/ui/button'
+import './App.css';
+import { ThemeProvider } from './components/theme-provider';
+import { Route, Routes } from 'react-router-dom';
+import { Home } from './pages/home';
 
 function App() {
-
   return (
-    <>
-      <Button>Click here
-      </Button>
-    </>
-  )
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <Routes>
+        <Route path='/' element={<Home />} />
+      </Routes>
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
