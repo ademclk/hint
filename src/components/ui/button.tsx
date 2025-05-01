@@ -1,7 +1,7 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
   [
@@ -11,11 +11,41 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: ["border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)] [box-shadow:inset_0_1.5px_1.5px_0_rgba(255,255,255,0.18)] dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)] dark:[box-shadow:inset_0_1.5px_1.5px_0_rgba(255,255,255,0.19)]", "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80"],
-        destructive: ["border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)] [box-shadow:inset_0_1.5px_1.5px_0_rgba(255,255,255,0.18)] dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)] dark:[box-shadow:inset_0_1.5px_1.5px_0_rgba(255,255,255,0.19)]", "bg-destructive text-white shadow-xs hover:bg-destructive/90 active:bg-destructive/80 focus-visible:ring-destructive/40"],
-        outline: ["border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)] [box-shadow:inset_0_1.5px_1.5px_0_rgba(255,255,255,0.18)] dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)] dark:[box-shadow:inset_0_1.5px_1.5px_0_rgba(255,255,255,0.19)]", "border-2 border-border bg-background/80 hover:bg-accent/60 hover:text-accent-foreground"],
-        secondary: ["border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)] [box-shadow:inset_0_1.5px_1.5px_0_rgba(255,255,255,0.18)] dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)] dark:[box-shadow:inset_0_1.5px_1.5px_0_rgba(255,255,255,0.19)]", "bg-secondary/80 text-secondary-foreground hover:bg-secondary/50 active:bg-secondary/60"],
-        ghost: ["border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)] [box-shadow:inset_0_1.5px_1.5px_0_rgba(255,255,255,0.18)] dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)] dark:[box-shadow:inset_0_1.5px_1.5px_0_rgba(255,255,255,0.19)]", "bg-transparent text-primary hover:bg-accent/40 hover:text-accent-foreground active:bg-accent/70"],
+        default: [
+          "border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)]",
+          "[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.55)]",
+          "dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)]",
+          "dark:[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.23)]",
+          "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80",
+        ].join(" "),
+        destructive: [
+          "border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)]",
+          "[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.55)]",
+          "dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)]",
+          "dark:[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.23)]",
+          "bg-destructive text-white shadow-xs hover:bg-destructive/90 active:bg-destructive/80 focus-visible:ring-destructive/40",
+        ].join(" "),
+        outline: [
+          "border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)]",
+          "[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.55)]",
+          "dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)]",
+          "dark:[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.23)]",
+          "border-2 border-border bg-background/80 hover:bg-accent/60 hover:text-accent-foreground",
+        ].join(" "),
+        secondary: [
+          "border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)]",
+          "[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.55)]",
+          "dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)]",
+          "dark:[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.23)]",
+          "bg-secondary/80 text-secondary-foreground hover:bg-secondary/50 active:bg-secondary/60",
+        ].join(" "),
+        ghost: [
+          "border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)]",
+          "[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.55)]",
+          "dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)]",
+          "dark:[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.23)]",
+          "bg-transparent text-primary hover:bg-accent/40 hover:text-accent-foreground active:bg-accent/70",
+        ].join(" "),
         link:
           "border-none shadow-none p-0 underline underline-offset-4 text-primary bg-transparent hover:underline hover:bg-transparent",
       },
@@ -31,7 +61,7 @@ const buttonVariants = cva(
       size: "default",
     },
   }
-)
+);
 
 function Button({
   className,
@@ -41,7 +71,7 @@ function Button({
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & { asChild?: boolean }) {
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot : "button";
   return (
     <Comp
       data-slot="button"
@@ -54,7 +84,7 @@ function Button({
       )}
       {...props}
     />
-  )
+  );
 }
 
-export { Button, buttonVariants }  
+export { Button, buttonVariants };  

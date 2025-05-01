@@ -135,7 +135,7 @@ function AlertDialogCancel({
 }: React.ComponentProps<typeof AlertDialogPrimitive.Cancel>) {
   return (
     <AlertDialogPrimitive.Cancel asChild>
-      <Button variant="outline" {...props} />
+      <Button variant="secondary" {...props} />
     </AlertDialogPrimitive.Cancel>
   )
 }
