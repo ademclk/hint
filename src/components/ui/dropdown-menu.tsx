@@ -24,7 +24,6 @@ function DropdownMenuContent({
         data-slot="dropdown-menu-content"
         sideOffset={sideOffset}
         className={cn(
-          // visionOS glass panel  
           "bg-popover/80 backdrop-blur-md border border-border/70 rounded-xl shadow-xl ring-1 ring-black/5 p-2 min-w-[10rem] " +
           "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 " +
           "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 " +
@@ -57,12 +56,9 @@ function DropdownMenuItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        // Apple hover/focus states: gentle, glassy, lift  
         "relative flex cursor-default items-center gap-2 select-none px-4 py-2 rounded-lg transition-all duration-100 " +
-        // HOVER: glass + lifted effect  
         "hover:bg-accent/80 hover:backdrop-blur-sm hover:shadow-lg " +
-        // FOCUS: ring and even more visible  
-        "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:bg-accent/80 focus-visible:backdrop-blur-md focus-visible:shadow-xl focus-visible:outline-none " +
+        "focus-visible:ring-0 focus-visible:border-transparent focus-visible:bg-accent/80 focus-visible:backdrop-blur-md focus-visible:shadow-xl focus-visible:outline-none " +
         "data-[variant=destructive]:text-destructive data-[variant=destructive]:focus-visible:bg-destructive/10 dark:data-[variant=destructive]:focus-visible:bg-destructive/20 " +
         "data-[variant=destructive]:focus-visible:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground " +
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-10 text-sm [&_svg]:shrink-0 [&_svg]:size-5",
