@@ -1,90 +1,76 @@
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  [
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50",
-    "outline-none ring-0 focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 transition-[box-shadow,background,ring]",
-  ],
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
-        default: [
-          "border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)]",
-          "[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.55)]",
-          "dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)]",
-          "dark:[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.23)]",
-          "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80",
-        ].join(" "),
-        destructive: [
-          "border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)]",
-          "[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.55)]",
-          "dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)]",
-          "dark:[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.23)]",
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 active:bg-destructive/80 focus-visible:ring-destructive/40",
-        ].join(" "),
-        outline: [
-          "border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)]",
-          "[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.55)]",
-          "dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)]",
-          "dark:[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.23)]",
-          "border-2 border-border bg-background/80 hover:bg-accent/60 hover:text-accent-foreground",
-        ].join(" "),
-        secondary: [
-          "border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)]",
-          "[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.55)]",
-          "dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)]",
-          "dark:[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.23)]",
-          "bg-secondary/80 text-secondary-foreground hover:bg-secondary/50 active:bg-secondary/60",
-        ].join(" "),
-        ghost: [
-          "border border-border backdrop-blur-xl bg-opacity-80 shadow-[0_1.5px_5px_0_rgba(60,60,60,0.09)]",
-          "[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.55)]",
-          "dark:border-border dark:shadow-[0_1.5px_5px_0_rgba(0,0,0,0.25)]",
-          "dark:[box-shadow:inset_0_1.5px_2.5px_0_rgba(255,255,255,0.23)]",
-          "bg-transparent text-primary hover:bg-accent/40 hover:text-accent-foreground active:bg-accent/70",
-        ].join(" "),
-        link:
-          "border-none shadow-none p-0 underline underline-offset-4 text-primary bg-transparent hover:underline hover:bg-transparent",
+        default: "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+        destructive: "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+        outline: "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+        secondary: "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-10 px-6 py-2 min-w-[44px] min-h-[44px]",
-        sm: "h-8 px-4 min-w-[32px] min-h-[32px]",
-        lg: "h-12 px-8 min-w-[56px] min-h-[56px]",
-        icon: "size-10 min-w-[44px] min-h-[44px]",
+        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        sm: "h-8 px-3 py-1.5 has-[>svg]:px-2.5",
+        lg: "h-10 px-6 py-2.5 has-[>svg]:px-4",
+        icon: "size-9 p-0",
+      },
+      shape: {
+        rectangle: "rounded-md", // or `rounded` if you want Apple radius  
+        ellipse: "rounded-full", // pill  
+        circle: "rounded-full aspect-square p-0", // circular, must be icon-size  
       },
     },
+    compoundVariants: [
+      // Makes circle buttons always use icon sizing  
+      {
+        shape: "circle",
+        size: "icon",
+        className: "size-9",
+      },
+      // You can add more size mapping here (icon-sm etc. if needed)  
+    ],
     defaultVariants: {
       variant: "default",
       size: "default",
+      shape: "rectangle",
     },
   }
-);
+)
 
 function Button({
   className,
   variant,
   size,
+  shape,
   asChild = false,
   ...props
 }: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & { asChild?: boolean }) {
-  const Comp = asChild ? Slot : "button";
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean
+    shape?: "rectangle" | "ellipse" | "circle"
+  }) {
+  const Comp = asChild ? Slot : "button"
   return (
     <Comp
       data-slot="button"
       className={cn(
-        "active:scale-[0.98]",
-        "select-none [webkit-tap-highlight-color:transparent] duration-200",
-        "cursor-pointer",
-        buttonVariants({ variant, size }),
-        className
+        buttonVariants({
+          variant,
+          size,
+          shape,
+          className,
+        })
       )}
       {...props}
     />
-  );
+  )
 }
 
-export { Button, buttonVariants };  
+export { Button, buttonVariants }  
