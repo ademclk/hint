@@ -385,15 +385,15 @@ export function Features() {
     }, []);
 
     return (
-        <section ref={sectionRef} className="w-full py-16 px-2 sm:px-6 md:px-12 lg:px-24 xl:px-32">
+        <section ref={sectionRef} className="w-full py-12 sm:py-16 md:py-20 px-4 sm:px-8 md:px-12 lg:px-24 xl:px-32">
             <div className="max-w-7xl mx-auto">
-                <div className="text-center mb-10">
+                <div className="text-center mb-12 sm:mb-16 md:mb-20">
                     <h2 className="features-title text-4xl md:text-5xl font-bold mb-4">Introducing Dotlanth</h2>
                     <p className="features-description text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto">
                         Write your business logic once, deploy instantly, and get a polished UI out of the box.
                     </p>
                 </div>
-                <div ref={cardsRef} className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 auto-rows-[90px] md:auto-rows-[120px]">
+                <div ref={cardsRef} className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8 auto-rows-[90px] sm:auto-rows-[100px] md:auto-rows-[120px] lg:auto-rows-[140px]">
                     {/* Modular APIs at top-left */}
                     <FeatureCard
                         title=""

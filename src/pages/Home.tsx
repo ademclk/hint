@@ -3,7 +3,10 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CanvasBackground } from "@/components/CanvasBackground";
 import { Features } from "@/components/Features";
+import { HowItWorks } from "@/components/HowItWorks";
+import { EcosystemSnapshot } from "@/components/EcosystemSnapshot";
 import { ModeToggle } from "@/components/mode-toggle";
+import { Footer } from "@/components/Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -55,7 +58,7 @@ export function Home() {
                     trigger: headingRef.current,
                     start: "top bottom-=100",
                     end: "top center",
-                    toggleActions: "play none none reverse"
+                    toggleActions: "play none none none"
                 }
             });
 
@@ -70,7 +73,7 @@ export function Home() {
                     trigger: descriptionRef.current,
                     start: "top bottom-=100",
                     end: "top center",
-                    toggleActions: "play none none reverse"
+                    toggleActions: "play none none none"
                 }
             });
         }, mainContentRef);
@@ -89,7 +92,7 @@ export function Home() {
                     <div className="flex flex-1 flex-col gap-12 justify-between w-full h-full">
                         <div ref={headingRef} className="w-full flex flex-col gap-1 sm:gap-2 items-center">
                             <h2 className="text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-foreground whitespace-normal md:whitespace-nowrap">
-                                Advancing technology. For&nbsp;all.
+                                Advancing technology. For all.
                             </h2>
                             <h1 className="text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-foreground whitespace-normal md:whitespace-nowrap">
                                 Welcome to Synerthink.
@@ -97,7 +100,7 @@ export function Home() {
                         </div>
                         <div ref={descriptionRef} className="w-full max-w-3xl flex flex-col gap-8 sm:gap-8 items-center mt-0 md:mt-6 flex-1 justify-center">
                             <p className="text-center text-lg sm:text-xl md:text-2xl font-light text-foreground leading-relaxed">
-                                We believe in a future where technology empowers everyone—trusted, open, and fundamentally human.
+                                We believe in a future where technology empowers everyone trusted, open, and fundamentally human.
                             </p>
                             <p className="text-center text-base sm:text-lg md:text-xl font-light text-foreground leading-relaxed">
                                 Building the next generation of digital infrastructure that enables people to connect, create, and collaborate with genuine security, privacy, and clarity at the core.
@@ -107,7 +110,10 @@ export function Home() {
                 </div>
             </div>
             <ModeToggle />
+            <HowItWorks />
             <Features />
+            <EcosystemSnapshot />
+            <Footer />
         </main>
     );
 }  

@@ -6,10 +6,10 @@ import gsap from "gsap";
 const NAV_LINKS = [
     { name: "About", href: "/about" },
     { name: "Solutions", href: "/solutions" },
-    { name: "Industries", href: "/industries" },
     { name: "Resources", href: "/resources" },
-    { name: "Alpha", href: "/alpha" },
-    { name: "Contact", href: "/contact" }
+    { name: "Contact", href: "/contact" },
+    { name: "Blog", href: "/blog" },
+
 ];
 
 function useBodyScrollLock(isLocked) {
