@@ -1,12 +1,17 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, lazy, Suspense } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CanvasBackground } from "@/components/CanvasBackground";
-import { Features } from "@/components/Features";
-import { HowItWorks } from "@/components/HowItWorks";
-import { EcosystemSnapshot } from "@/components/EcosystemSnapshot";
 
-gsap.registerPlugin(ScrollTrigger);
+// Lazy load components
+const Features = lazy(() => import("@/components/Features"));
+const HowItWorks = lazy(() => import("@/components/HowItWorks"));
+const EcosystemSnapshot = lazy(() => import("@/components/EcosystemSnapshot"));
+
+// Register GSAP plugin only once
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 export function Home() {
     const scrollIndicatorRef = useRef<HTMLDivElement>(null);
@@ -15,30 +20,35 @@ export function Home() {
     const descriptionRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Continuous bounce animation
-        gsap.to(scrollIndicatorRef.current, {
-            y: 15,
-            duration: 1.5,
-            repeat: -1,
-            yoyo: true,
-            ease: "power1.inOut",
-            delay: 1.5
-        });
-
-        // Arrow pulse animation
-        const arrow = scrollIndicatorRef.current?.querySelector("svg");
-        if (arrow) {
-            gsap.to(arrow, {
-                scale: 1.1,
-                duration: 1,
+        // Use requestAnimationFrame for smoother animations
+        const animate = () => {
+            // Continuous bounce animation
+            gsap.to(scrollIndicatorRef.current, {
+                y: 15,
+                duration: 1.5,
                 repeat: -1,
                 yoyo: true,
                 ease: "power1.inOut",
                 delay: 1.5
             });
-        }
 
-        // Scroll-triggered animations
+            // Arrow pulse animation
+            const arrow = scrollIndicatorRef.current?.querySelector("svg");
+            if (arrow) {
+                gsap.to(arrow, {
+                    scale: 1.1,
+                    duration: 1,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "power1.inOut",
+                    delay: 1.5
+                });
+            }
+        };
+
+        requestAnimationFrame(animate);
+
+        // Scroll-triggered animations with optimized settings
         const ctx = gsap.context(() => {
             // Initial state
             gsap.set([headingRef.current, descriptionRef.current], {
@@ -46,7 +56,7 @@ export function Home() {
                 opacity: 0
             });
 
-            // Animate heading
+            // Animate heading with optimized settings
             gsap.to(headingRef.current, {
                 y: 0,
                 opacity: 1,
@@ -56,11 +66,13 @@ export function Home() {
                     trigger: headingRef.current,
                     start: "top bottom-=100",
                     end: "top center",
-                    toggleActions: "play none none none"
+                    toggleActions: "play none none none",
+                    fastScrollEnd: true,
+                    preventOverlaps: true
                 }
             });
 
-            // Animate description with a slight delay
+            // Animate description with optimized settings
             gsap.to(descriptionRef.current, {
                 y: 0,
                 opacity: 1,
@@ -71,13 +83,15 @@ export function Home() {
                     trigger: descriptionRef.current,
                     start: "top bottom-=100",
                     end: "top center",
-                    toggleActions: "play none none none"
+                    toggleActions: "play none none none",
+                    fastScrollEnd: true,
+                    preventOverlaps: true
                 }
             });
         }, mainContentRef);
 
         return () => {
-            ctx.revert(); // Cleanup animations
+            ctx.revert();
         };
     }, []);
 
@@ -107,9 +121,15 @@ export function Home() {
                     </div>
                 </div>
             </div>
-            <HowItWorks />
-            <Features />
-            <EcosystemSnapshot />
+            <Suspense fallback={<div className="min-h-screen" />}>
+                <HowItWorks />
+            </Suspense>
+            <Suspense fallback={<div className="min-h-screen" />}>
+                <Features />
+            </Suspense>
+            <Suspense fallback={<div className="min-h-screen" />}>
+                <EcosystemSnapshot />
+            </Suspense>
         </main>
     );
 }  

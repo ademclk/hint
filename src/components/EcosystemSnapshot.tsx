@@ -21,7 +21,7 @@ const EcosystemCard = ({ title, description, colorClass }: EcosystemCardProps) =
     );
 };
 
-export function EcosystemSnapshot() {
+export default function EcosystemSnapshot() {
     const sectionRef = useRef<HTMLElement>(null);
     const cardsRef = useRef<HTMLDivElement>(null);
 

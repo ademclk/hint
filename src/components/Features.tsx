@@ -326,7 +326,7 @@ const FeatureCard = ({ title, colorClass, bgClass, subLabel, span = "", compact 
     );
 };
 
-export function Features() {
+export default function Features() {
     const sectionRef = useRef<HTMLElement>(null);
     const cardsRef = useRef<HTMLDivElement>(null);
 

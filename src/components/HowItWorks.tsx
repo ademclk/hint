@@ -27,7 +27,7 @@ const Step = ({ title, description, colorClass, number }: StepProps) => {
     );
 };
 
-export function HowItWorks() {
+export default function HowItWorks() {
     const sectionRef = useRef<HTMLElement>(null);
     const stepsRef = useRef<HTMLDivElement>(null);
 

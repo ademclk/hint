@@ -1,9 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, lazy, Suspense } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AnimatedBackground from '../components/AnimatedBackground';
 
-gsap.registerPlugin(ScrollTrigger);
+// Register GSAP plugin only once
+if (typeof window !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+}
+
+// Lazy load sections
+const TechnicalArchitecture = lazy(() => import('../components/blog/TechnicalArchitecture'));
+const DotVariants = lazy(() => import('../components/blog/DotVariants'));
+const DevelopmentExperience = lazy(() => import('../components/blog/DevelopmentExperience'));
+const FutureGoals = lazy(() => import('../components/blog/FutureGoals'));
 
 const BlogPost: React.FC = () => {
     const mainContentRef = useRef<HTMLDivElement>(null);
@@ -13,7 +22,7 @@ const BlogPost: React.FC = () => {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Initial animations for the hero section
+            // Initial animations for the hero section with optimized settings
             gsap.from(headingRef.current, {
                 y: 50,
                 opacity: 0,
@@ -23,7 +32,9 @@ const BlogPost: React.FC = () => {
                     trigger: headingRef.current,
                     start: "top bottom-=100",
                     end: "top center",
-                    toggleActions: "play none none reverse"
+                    toggleActions: "play none none reverse",
+                    fastScrollEnd: true,
+                    preventOverlaps: true
                 }
             });
 
@@ -37,11 +48,13 @@ const BlogPost: React.FC = () => {
                     trigger: descriptionRef.current,
                     start: "top bottom-=100",
                     end: "top center",
-                    toggleActions: "play none none reverse"
+                    toggleActions: "play none none reverse",
+                    fastScrollEnd: true,
+                    preventOverlaps: true
                 }
             });
 
-            // Animate sections as they come into view
+            // Animate sections as they come into view with optimized settings
             sectionRefs.current.forEach((section, index) => {
                 if (section) {
                     gsap.from(section, {
@@ -54,12 +67,14 @@ const BlogPost: React.FC = () => {
                             trigger: section,
                             start: "top bottom-=100",
                             end: "top center",
-                            toggleActions: "play none none reverse"
+                            toggleActions: "play none none reverse",
+                            fastScrollEnd: true,
+                            preventOverlaps: true
                         }
                     });
                 }
             });
-        }, mainContentRef)
+        }, mainContentRef);
 
         return () => {
             ctx.revert();
@@ -129,138 +144,25 @@ const BlogPost: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Technical Architecture Section */}
-                        <div ref={setSectionRef(1)} className="mb-16">
-                            <h2 className="text-3xl font-semibold mb-6">Technical Architecture</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                                <div className="bg-gray-100 dark:bg-neutral-900 p-6 rounded-lg">
-                                    <h3 className="text-xl font-semibold mb-4">DOTVM (Dotlanth Virtual Machine)</h3>
-                                    <ul className="list-disc pl-6 space-y-2">
-                                        <li>Custom bytecode interpreter for efficient dot execution</li>
-                                        <li>Built-in concurrency support with actor model</li>
-                                        <li>Hot-reloading capabilities for instant updates</li>
-                                        <li>Memory-safe execution environment</li>
-                                    </ul>
-                                </div>
-                                <div className="bg-gray-100 dark:bg-neutral-900 p-6 rounded-lg">
-                                    <h3 className="text-xl font-semibold mb-4">DOTDB (Dotlanth Database)</h3>
-                                    <ul className="list-disc pl-6 space-y-2">
-                                        <li>Distributed key-value store with ACID compliance</li>
-                                        <li>Built-in versioning and conflict resolution</li>
-                                        <li>Automatic sharding and replication</li>
-                                        <li>Zero-configuration setup</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        {/* Lazy loaded sections */}
+                        <Suspense fallback={<div className="min-h-[200px]" />}>
+                            <TechnicalArchitecture ref={setSectionRef(1)} />
+                        </Suspense>
 
-                        {/* ParaDots Section */}
-                        <div ref={setSectionRef(2)} className="mb-16">
-                            <h2 className="text-3xl font-semibold mb-6">ParaDots: Parallel Processing</h2>
-                            <div className="bg-gray-100 dark:bg-neutral-900 p-6 rounded-lg mb-6">
-                                <h3 className="text-xl font-semibold mb-4">Key Features</h3>
-                                <ul className="list-disc pl-6 space-y-2">
-                                    <li>Automatic parallelization of independent operations</li>
-                                    <li>Built-in deadlock prevention</li>
-                                    <li>Resource-aware scheduling</li>
-                                    <li>Cross-dot communication primitives</li>
-                                </ul>
-                            </div>
-                        </div>
+                        <Suspense fallback={<div className="min-h-[200px]" />}>
+                            <DotVariants ref={setSectionRef(2)} />
+                        </Suspense>
 
-                        {/* Dot Variants Section */}
-                        <div ref={setSectionRef(3)} className="mb-16">
-                            <h2 className="text-3xl font-semibold mb-6">Dot Variants</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="bg-gray-100 dark:bg-neutral-900 p-6 rounded-lg">
-                                    <h3 className="text-xl font-semibold mb-4">ParaDots</h3>
-                                    <p className="mb-4">Parallelizable dots for high-performance computing:</p>
-                                    <ul className="list-disc pl-6 space-y-2">
-                                        <li>Automatic parallelization</li>
-                                        <li>Resource optimization</li>
-                                        <li>Cross-dot communication</li>
-                                    </ul>
-                                </div>
-                                <div className="bg-gray-100 dark:bg-neutral-900 p-6 rounded-lg">
-                                    <h3 className="text-xl font-semibold mb-4">DataDots</h3>
-                                    <p className="mb-4">Dots that act as schemas and data sources:</p>
-                                    <ul className="list-disc pl-6 space-y-2">
-                                        <li>Schema validation</li>
-                                        <li>Data transformation</li>
-                                        <li>Real-time updates</li>
-                                    </ul>
-                                </div>
-                                <div className="bg-gray-100 dark:bg-neutral-900 p-6 rounded-lg">
-                                    <h3 className="text-xl font-semibold mb-4">UILinks</h3>
-                                    <p className="mb-4">Auto-bound UI components to dots:</p>
-                                    <ul className="list-disc pl-6 space-y-2">
-                                        <li>Automatic UI generation</li>
-                                        <li>Real-time updates</li>
-                                        <li>Responsive design</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        <Suspense fallback={<div className="min-h-[200px]" />}>
+                            <DevelopmentExperience ref={setSectionRef(3)} />
+                        </Suspense>
 
-                        {/* Development Experience Section */}
-                        <div ref={setSectionRef(4)} className="mb-16">
-                            <h2 className="text-3xl font-semibold mb-6">Development Experience</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="bg-gray-100 dark:bg-neutral-900 p-6 rounded-lg">
-                                    <h3 className="text-xl font-semibold mb-4">Local Development</h3>
-                                    <ul className="list-disc pl-6 space-y-2">
-                                        <li>Instant local environment setup</li>
-                                        <li>Hot-reloading development server</li>
-                                        <li>Built-in debugging tools</li>
-                                    </ul>
-                                </div>
-                                <div className="bg-gray-100 dark:bg-neutral-900 p-6 rounded-lg">
-                                    <h3 className="text-xl font-semibold mb-4">Testing</h3>
-                                    <ul className="list-disc pl-6 space-y-2">
-                                        <li>Automated test generation</li>
-                                        <li>Property-based testing</li>
-                                        <li>Performance benchmarking</li>
-                                    </ul>
-                                </div>
-                                <div className="bg-gray-100 dark:bg-neutral-900 p-6 rounded-lg">
-                                    <h3 className="text-xl font-semibold mb-4">Deployment</h3>
-                                    <ul className="list-disc pl-6 space-y-2">
-                                        <li>One-command deployment</li>
-                                        <li>Automatic scaling</li>
-                                        <li>Zero-downtime updates</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Future Goals Section */}
-                        <div ref={setSectionRef(5)} className="mb-16">
-                            <h2 className="text-3xl font-semibold mb-6">Future Goals</h2>
-                            <div className="space-y-6">
-                                <div className="bg-gray-100 dark:bg-neutral-900 p-6 rounded-lg">
-                                    <h3 className="text-xl font-semibold mb-4">AI-Powered Development</h3>
-                                    <p className="mb-4">We're working on integrating AI capabilities to assist developers:</p>
-                                    <ul className="list-disc pl-6 space-y-2">
-                                        <li>Automated code generation from natural language</li>
-                                        <li>Intelligent test case generation</li>
-                                        <li>Performance optimization suggestions</li>
-                                        <li>Security vulnerability detection</li>
-                                    </ul>
-                                </div>
-                                <div className="bg-gray-100 dark:bg-neutral-900 p-6 rounded-lg">
-                                    <h3 className="text-xl font-semibold mb-4">Zero-Knowledge Integration</h3>
-                                    <p className="mb-4">Advanced privacy features in development:</p>
-                                    <ul className="list-disc pl-6 space-y-2">
-                                        <li>Private computation capabilities</li>
-                                        <li>Secure multi-party computation</li>
-                                        <li>Privacy-preserving analytics</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                        <Suspense fallback={<div className="min-h-[200px]" />}>
+                            <FutureGoals ref={setSectionRef(4)} />
+                        </Suspense>
 
                         {/* Call to Action */}
-                        <div ref={setSectionRef(6)} className="text-center mt-16">
+                        <div ref={setSectionRef(5)} className="text-center mt-16">
                             <h2 className="text-3xl font-semibold mb-6">Join Us in Building the Future</h2>
                             <p className="mb-8 text-lg">
                                 We're excited to build this future with you. Stay tuned for updates as we continue to develop Dotlanth.
