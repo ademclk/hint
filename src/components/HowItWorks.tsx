@@ -104,13 +104,13 @@ export function HowItWorks() {
                             <Step
                                 number={1}
                                 title="Write"
-                                description="Craft your business logic as lightweight contracts no servers, no infrastructure."
+                                description="Craft your business logic as lightweight dots – no servers, no infrastructure."
                                 colorClass="text-blue-400"
                             />
                             <Step
                                 number={2}
                                 title="Deploy"
-                                description="Push your contract to Dotlanth's VM in one click. We handle the runtime, parallel execution, and state."
+                                description="Push your dot to Dotlanth's VM in one click. We handle the runtime, parallel execution, and state."
                                 colorClass="text-green-400"
                             />
                             <Step

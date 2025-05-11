@@ -5,8 +5,6 @@ import { CanvasBackground } from "@/components/CanvasBackground";
 import { Features } from "@/components/Features";
 import { HowItWorks } from "@/components/HowItWorks";
 import { EcosystemSnapshot } from "@/components/EcosystemSnapshot";
-import { ModeToggle } from "@/components/mode-toggle";
-import { Footer } from "@/components/Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -109,11 +107,9 @@ export function Home() {
                     </div>
                 </div>
             </div>
-            <ModeToggle />
             <HowItWorks />
             <Features />
             <EcosystemSnapshot />
-            <Footer />
         </main>
     );
 }  

@@ -2,14 +2,14 @@ import { useEffect, useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import SynerthinkLogo from "./synerthink-logo";
 import gsap from "gsap";
+import { ModeToggle } from './mode-toggle';
+import { Button } from './ui/button';
 
 const NAV_LINKS = [
     { name: "About", href: "/about" },
     { name: "Solutions", href: "/solutions" },
     { name: "Resources", href: "/resources" },
-    { name: "Contact", href: "/contact" },
     { name: "Blog", href: "/blog" },
-
 ];
 
 function useBodyScrollLock(isLocked) {
