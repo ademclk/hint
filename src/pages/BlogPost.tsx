@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { Helmet } from 'react-helmet-async';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AnimatedBackground from '../components/AnimatedBackground';
@@ -73,18 +72,17 @@ const BlogPost: React.FC = () => {
 
     return (
         <>
-            <Helmet>
-                <title>Introducing Dotlanth | Synerthink Blog</title>
-                <meta name="description" content="Learn about our vision for simplifying software development with Dotlanth, a new foundation for your software projects." />
-                <meta name="keywords" content="Dotlanth, Synerthink, software development, technology, innovation, software foundation" />
-                <meta property="og:title" content="Introducing Dotlanth | Synerthink Blog" />
-                <meta property="og:description" content="Learn about our vision for simplifying software development with Dotlanth, a new foundation for your software projects." />
-                <meta property="og:type" content="article" />
-                <meta property="article:published_time" content="2025-05-01" />
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content="Introducing Dotlanth | Synerthink Blog" />
-                <meta name="twitter:description" content="Learn about our vision for simplifying software development with Dotlanth, a new foundation for your software projects." />
-            </Helmet>
+            <title>Introducing Dotlanth | Synerthink Blog</title>
+            <meta name="description" content="Learn about our vision for simplifying software development with Dotlanth, a new foundation for your software projects." />
+            <meta name="keywords" content="Dotlanth, Synerthink, software development, technology, innovation, software foundation" />
+            <meta property="og:title" content="Introducing Dotlanth | Synerthink Blog" />
+            <meta property="og:description" content="Learn about our vision for simplifying software development with Dotlanth, a new foundation for your software projects." />
+            <meta property="og:type" content="article" />
+            <meta property="article:published_time" content="2025-05-01" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content="Introducing Dotlanth | Synerthink Blog" />
+            <meta name="twitter:description" content="Learn about our vision for simplifying software development with Dotlanth, a new foundation for your software projects." />
+
             <main className="relative min-h-screen flex flex-col bg-background text-foreground overflow-hidden transition-colors">
                 {/* Hero Section with Animated Background */}
                 <div className="relative w-full flex items-center justify-center min-h-[60vh] px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32">

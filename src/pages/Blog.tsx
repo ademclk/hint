@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 
 const Blog: React.FC = () => {
     const blogPosts = [
@@ -15,17 +14,16 @@ const Blog: React.FC = () => {
 
     return (
         <>
-            <Helmet>
-                <title>Blog | Synerthink</title>
-                <meta name="description" content="Explore our latest insights, updates, and thoughts on software development, technology, and innovation at Synerthink." />
-                <meta name="keywords" content="Synerthink, blog, software development, technology, innovation, Dotlanth" />
-                <meta property="og:title" content="Blog | Synerthink" />
-                <meta property="og:description" content="Explore our latest insights, updates, and thoughts on software development, technology, and innovation at Synerthink." />
-                <meta property="og:type" content="website" />
-                <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content="Blog | Synerthink" />
-                <meta name="twitter:description" content="Explore our latest insights, updates, and thoughts on software development, technology, and innovation at Synerthink." />
-            </Helmet>
+            <title>Blog | Synerthink</title>
+            <meta name="description" content="Explore our latest insights, updates, and thoughts on software development, technology, and innovation at Synerthink." />
+            <meta name="keywords" content="Synerthink, blog, software development, technology, innovation, Dotlanth" />
+            <meta property="og:title" content="Blog | Synerthink" />
+            <meta property="og:description" content="Explore our latest insights, updates, and thoughts on software development, technology, and innovation at Synerthink." />
+            <meta property="og:type" content="website" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content="Blog | Synerthink" />
+            <meta name="twitter:description" content="Explore our latest insights, updates, and thoughts on software development, technology, and innovation at Synerthink." />
+
             <div className="max-w-4xl mx-auto px-4 py-8 min-h-[calc(100vh-4rem)]">
                 <h1 className="text-4xl font-bold mb-8">Blog</h1>
                 <div className="space-y-8">
