@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 // import { sdk } from '@farcaster/frame-sdk'; // sdk is unused
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import matter from 'gray-matter';
+import blogPostsData from '../blogData.json';
 import { ContributePanel } from '../components/ContributePanel';
 
 // Interface for blog post data (frontmatter + content)
@@ -19,33 +19,26 @@ interface BlogPostData {
   content: string; // This will be the main markdown content
 }
 
-// Function to load a blog post from a markdown file
+// Function to load a blog post from blogData.json
 async function loadBlogPost(slug: string): Promise<BlogPostData | null> {
   try {
-    console.log(`Attempting to load blog post: /content/blog/${slug}.md`);
-    const markdownModule = await import(`../content/blog/${slug}.md?raw`);
-    const rawContent = markdownModule.default;
-
-    // Parse frontmatter and content
-    const { data, content: mainContent } = matter(rawContent);
-
-    // Construct the BlogPostData object
-    const postData: BlogPostData = {
-      slug: slug,
-      title: data.title || 'Untitled Post',
-      date: data.date || new Date().toLocaleDateString(),
-      category: data.category || 'Uncategorized',
-      author: data.author || 'Anonymous',
-      authorRole: data.authorRole || '',
-      readTime: data.readTime || 'N/A',
-      excerpt: data.excerpt || '',
-      content: mainContent,
-    };
-
-    console.log('Successfully parsed blog post:', postData.title);
-    return postData;
+    const post = blogPostsData.find(p => p.slug === slug);
+    if (post) {
+      // Format date if needed, though it's already ISO string from script
+      const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+      return {
+        ...post,
+        date: formattedDate,
+      };
+    }
+    console.error(`Blog post with slug '${slug}' not found.`);
+    return null;
   } catch (error) {
-    console.error('Error loading blog post:', error);
+    console.error('Error loading blog post from JSON:', error);
     return null;
   }
 }

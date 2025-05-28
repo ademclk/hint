@@ -1,17 +1,27 @@
 import { Link } from 'react-router-dom';
 import { sdk } from '@farcaster/frame-sdk';
+import blogPostsData from '../blogData.json'; // Import the generated blog data
 
-// Sample blog post data (in a real app, this would come from a CMS or data file)
-const posts = [
-  {
-    slug: 'introducing-hint',
-    title: 'Introducing HINT: Human In The Loop Protocol',
-    date: 'May 27, 2025',
-    category: 'Announcement',
-    excerpt: 'Discover the HINT Protocol, a new approach to quantum education that puts humans at the center of the learning process. Learn how we are making quantum concepts more accessible and intuitive.',
-    author: 'ademclk',
-  }
-];
+interface BlogPostEntry {
+  slug: string;
+  title: string;
+  date: string; // Dates are already formatted as ISO strings in JSON
+  category: string;
+  author: string;
+  authorRole?: string;
+  readTime?: string;
+  excerpt: string;
+}
+
+const posts: BlogPostEntry[] = blogPostsData.map(post => ({
+  ...post,
+  // Format date for display
+  date: new Date(post.date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }),
+}));
 
 export default function Blog() {
   return (

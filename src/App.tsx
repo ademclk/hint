@@ -1,15 +1,17 @@
 import './App.css';
 import { ThemeProvider } from './components/theme-provider';
 import { Route, Routes } from 'react-router-dom';
-import { Home } from './pages/Home';
-import Solutions from './pages/Solutions.tsx';
-import Resources from './pages/Resources.tsx';
-import Blog from './pages/Blog.tsx';
-import BlogPost from './pages/BlogPost.tsx';
+import { Suspense, lazy } from 'react';
 import BottomNavbar from './components/BottomNavbar';
 import ScrollToTop from './components/ScrollToTop';
 
-import { Experiments } from './pages/Experiments';
+// Lazy load page components
+const Home = lazy(() => import('./pages/Home.tsx').then(module => ({ default: module.Home }))); // Named export
+const Solutions = lazy(() => import('./pages/Solutions.tsx')); // Default export
+const Resources = lazy(() => import('./pages/Resources.tsx')); // Default export
+const Blog = lazy(() => import('./pages/Blog.tsx')); // Default export
+const BlogPost = lazy(() => import('./pages/BlogPost.tsx')); // Default export
+const Experiments = lazy(() => import('./pages/Experiments').then(module => ({ default: module.Experiments }))); // Named export
 import { sdk } from '@farcaster/frame-sdk';
 import { useEffect } from 'react';
 
@@ -39,14 +41,16 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <ScrollToTop />
       <div className="pb-16"> {/* Main content wrapper with bottom padding for BottomNavbar */}
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/solutions' element={<Solutions />} />
-          <Route path='/resources' element={<Resources />} />
-          <Route path='/blog' element={<Blog />} />
-          <Route path='/blog/:slug' element={<BlogPost />} />
-          <Route path='/experiments' element={<Experiments />} />
-        </Routes>
+        <Suspense fallback={<div className='flex justify-center items-center h-screen w-full'><p>Loading...</p></div>}>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/solutions' element={<Solutions />} />
+            <Route path='/resources' element={<Resources />} />
+            <Route path='/blog' element={<Blog />} />
+            <Route path='/blog/:slug' element={<BlogPost />} />
+            <Route path='/experiments' element={<Experiments />} />
+          </Routes>
+        </Suspense>
       </div> {/* End of main content wrapper */}
       <BottomNavbar />
     </ThemeProvider>
