@@ -184,13 +184,13 @@ export default function BlogPost() {
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
-                    h1: ({node, ...props}) => <h1 className="text-4xl font-bold mt-12 mb-6 text-primary dark:text-primary leading-tight" {...props} />,
-                    h2: ({node, ...props}) => <h2 className="text-3xl font-semibold mt-10 mb-5 text-foreground dark:text-foreground leading-snug" {...props} />,
-                    h3: ({node, ...props}) => <h3 className="text-2xl font-semibold mt-8 mb-4 text-foreground dark:text-foreground leading-snug" {...props} />,
-                    p: ({node, ...props}) => <p className="text-lg text-muted-foreground dark:text-muted-foreground mb-6 leading-relaxed" {...props} />,
-                    ul: ({node, ...props}) => <ul className="list-disc list-inside mb-6 pl-4 text-lg text-muted-foreground dark:text-muted-foreground space-y-2" {...props} />,
+                    h1: ({node, ...props}) => <h1 className="text-3xl md:text-4xl font-bold mt-12 mb-6 text-primary dark:text-primary leading-tight" {...props} />,
+                    h2: ({node, ...props}) => <h2 className="text-2xl md:text-3xl font-semibold mt-10 mb-5 text-foreground dark:text-foreground leading-snug" {...props} />,
+                    h3: ({node, ...props}) => <h3 className="text-xl md:text-2xl font-semibold mt-8 mb-4 text-foreground dark:text-foreground leading-snug" {...props} />,
+                    p: ({node, ...props}) => <p className="text-base md:text-lg text-muted-foreground dark:text-muted-foreground mb-6 leading-relaxed" {...props} />,
+                    ul: ({node, ...props}) => <ul className="list-disc list-inside mb-6 pl-4 text-base md:text-lg text-muted-foreground dark:text-muted-foreground space-y-2" {...props} />,
                     li: ({node, ...props}) => <li className="leading-relaxed" {...props} />,
-                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary dark:border-primary pl-6 py-2 my-6 italic text-xl text-foreground dark:text-foreground bg-primary/5 dark:bg-primary/5 rounded-r-md" {...props} />,
+                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary dark:border-primary pl-6 py-2 my-6 italic text-lg md:text-xl text-foreground dark:text-foreground bg-primary/5 dark:bg-primary/5 rounded-r-md" {...props} />,
                     // You can add more custom renderers for other elements like code, a, etc.
                   }}
                 >
