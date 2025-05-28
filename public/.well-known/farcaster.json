@@ -1,24 +1,23 @@
 {
   "frame": {
     "version": "1",
-    "name": "HINT Protocol",
+    "name": "HINT",
+    "homeUrl": "https://hint.synerthink.com/",
     "iconUrl": "https://raw.githubusercontent.com/ademclk/hint/refs/heads/main/public/hint-logo.png",
     "buttonTitle": "Explore HINT",
     "splashImageUrl": "https://raw.githubusercontent.com/ademclk/hint/refs/heads/main/public/hint-splash.png",
     "splashBackgroundColor": "#ececec",
-    "subtitle": "Human In The Loop Protocol",
+    "subtitle": "Human In The Loop",
     "description": "A collaborative approach to quantum education where humans help refine explanations through shared understanding.",
     "primaryCategory": "education",
     "tags": [
       "quantum",
       "education",
       "science",
-      "physics",
-      "hint",
-      "ademclk"
+      "physics"
     ],
-    "tagline": "Explore the quantum world with intuitive explanations",
-    "ogTitle": "HINT Protocol - Human In The Loop",
-    "ogDescription": "Discover quantum computing through intuitive explanations and interactive experiences where your participation matters."
+    "tagline": "Explore the quantum world.",
+    "ogTitle": "HINT - Human In The Loop",
+    "ogDescription": "Discover quantum computing where your participation matters."
   }
 }
