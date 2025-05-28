@@ -7,6 +7,7 @@ import Resources from './pages/Resources.tsx';
 import Blog from './pages/Blog.tsx';
 import BlogPost from './pages/BlogPost.tsx';
 import BottomNavbar from './components/BottomNavbar';
+import ScrollToTop from './components/ScrollToTop';
 
 import { Experiments } from './pages/Experiments';
 import { sdk } from '@farcaster/frame-sdk';
@@ -36,6 +37,7 @@ function App() {
   
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ScrollToTop />
       <div className="pb-16"> {/* Main content wrapper with bottom padding for BottomNavbar */}
         <Routes>
           <Route path='/' element={<Home />} />

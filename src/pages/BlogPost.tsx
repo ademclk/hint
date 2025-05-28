@@ -186,7 +186,7 @@ export default function BlogPost() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Main content */}
           <article className="lg:col-span-8 lg:col-start-3 animate-[fade-in_1s_ease-out_0.3s_forwards]">
-            <div className="article-content max-w-none bg-card/20 dark:bg-card/10 rounded-xl p-8 shadow-sm">
+            <div className="article-content max-w-none p-8 dark:bg-card/10 dark:rounded-xl dark:shadow-sm">
               <div className="article-markdown prose prose-lg dark:prose-invert max-w-none text-foreground dark:text-foreground">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
