@@ -16,10 +16,13 @@
       "science",
       "physics"
     ],
-    "heroImageUrl": "https://raw.githubusercontent.com/ademclk/hint/refs/heads/main/public/hint-hero.png",
     "tagline": "Explore the quantum world.",
     "ogTitle": "HINT - Human In The Loop",
     "ogDescription": "Discover quantum computing where your participation matters.",
-    "ogImageUrl": "https://raw.githubusercontent.com/ademclk/hint/refs/heads/main/public/hint-logo.png"
+    "accountAssociation": {
+    "header": "eyJmaWQiOjM4ODU2OSwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDM4ZEM1NTFjQkVCQWNhQzUyYzQ2RThGM2REOWQyZkY3YzE2MjNGODEifQ",
+    "payload": "eyJkb21haW4iOiJoaW50LnN5bmVydGhpbmsuY29tIn0",
+    "signature": "MHhlMzBjZmU5NmZiNjQ3YzFiYjAxZDg4NWU0NjE3MTA4NjgyZjlkN2QxMDk0MDdkN2IwZjY1N2EwMDczMjgwYTgxNjkwZDFhMDhjZmE5M2E4ZDM0NGZhYzMwNWQwYmUwMTYxMjM5ZTVlMDhhOWJiNTI1MTJmODkxZDYzZjFlYjkzNTFj"
+  }
   }
 }
