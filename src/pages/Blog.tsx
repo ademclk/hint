@@ -31,10 +31,10 @@ export default function Blog() {
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent"></div>
         <div className="container mx-auto px-6 relative z-10">
           <header className="max-w-2xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-medium tracking-tight mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight mb-4">
               Articles
             </h1>
-            <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto">
               Exploring quantum concepts through clear, intuitive explanations.
             </p>
           </header>
@@ -56,7 +56,7 @@ export default function Blog() {
                     <span className="ml-2 px-2 py-0.5 rounded-full bg-primary/20 text-primary/90">New</span>
                   </div>
                   
-                  <h2 className="text-3xl md:text-4xl font-medium mb-4">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium mb-4">
                     {posts[0].title}
                   </h2>
                   
@@ -68,10 +68,10 @@ export default function Blog() {
                     </span>
                   </div>
                   
-                  <p className="text-muted-foreground leading-relaxed mb-6 text-lg max-w-3xl">
+                  <p className="text-muted-foreground leading-relaxed mb-6 text-base sm:text-lg max-w-3xl">
                     Discover the HINT Protocol, a framework for quantum education that leverages collective human intelligence to make complex quantum concepts more intuitive and accessible. Unlike traditional educational approaches, HINT incorporates diverse perspectives from learners themselves.
                   </p>
-                  <p className="text-muted-foreground leading-relaxed mb-8 text-lg max-w-3xl">
+                  <p className="text-muted-foreground leading-relaxed mb-8 text-base sm:text-lg max-w-3xl">
                     Today, we're launching our Farcaster mini app as the first implementation of HINT Protocol, featuring interactive quantum experiments, community contributions, and personalized learning paths.
                   </p>
                   
@@ -106,8 +106,8 @@ export default function Blog() {
         <div className="bg-card border border-border rounded-2xl p-8 max-w-3xl mx-auto">
           <div className="grid md:grid-cols-2 gap-8">
             <div className="text-center md:text-left">
-              <h3 className="text-xl font-medium mb-3">Stay Updated</h3>
-              <p className="text-muted-foreground mb-6">
+              <h3 className="text-lg sm:text-xl font-medium mb-3">Stay Updated</h3>
+              <p className="text-sm sm:text-base text-muted-foreground mb-6">
                 Follow <span className="text-primary">@ademclk</span> on Farcaster for the latest updates on HINT Protocol and quantum computing.
               </p>
               <a 
@@ -136,8 +136,8 @@ export default function Blog() {
             </div>
             
             <div className="text-center md:text-left">
-              <h3 className="text-xl font-medium mb-3">Connect Your Wallet</h3>
-              <p className="text-muted-foreground mb-6">
+              <h3 className="text-lg sm:text-xl font-medium mb-3">Connect Your Wallet</h3>
+              <p className="text-sm sm:text-base text-muted-foreground mb-6">
                 Explore quantum experiments and contribute your insights by connecting your wallet. HINT Protocol supports both standard wallet connections and Farcaster authentication.
               </p>
               <button 
