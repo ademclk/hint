@@ -2,9 +2,9 @@
   "frame": {
     "version": "1",
     "name": "HINT Protocol",
-    "iconUrl": "https://ademonurcelik.github.io/hint/logo.png",
+    "iconUrl": "https://raw.githubusercontent.com/ademclk/hint/refs/heads/main/public/hint-logo.png",
     "buttonTitle": "Explore HINT",
-    "splashImageUrl": "https://ademonurcelik.github.io/hint/logo.png",
+    "splashImageUrl": "https://raw.githubusercontent.com/ademclk/hint/refs/heads/main/public/hint-splash.png",
     "splashBackgroundColor": "#ececec",
     "subtitle": "Human In The Loop Protocol",
     "description": "A collaborative approach to quantum education where humans help refine explanations through shared understanding.",
