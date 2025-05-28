@@ -1,9 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
-import SynerthinkLogo from "./synerthink-logo";
+import { Link } from "react-router-dom";
+import { HintLogo } from "./HintLogo";
 import gsap from "gsap";
-import { ModeToggle } from './mode-toggle';
-import { Button } from './ui/button';
 
 const NAV_LINKS = [
     { name: "About", href: "/about" },
@@ -12,21 +10,22 @@ const NAV_LINKS = [
     { name: "Blog", href: "/blog" },
 ];
 
-function useBodyScrollLock(isLocked) {
+function useBodyScrollLock(isLocked: boolean): void {
     useEffect(() => {
         if (isLocked) {
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "";
         }
-        return () => (document.body.style.overflow = "");
+        return () => {
+            document.body.style.overflow = "";
+        };
     }, [isLocked]);
 }
 
 export default function Navbar() {
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
-    const location = useLocation();
     const menuButtonRef = useRef<HTMLButtonElement>(null);
     const menuOverlayRef = useRef<HTMLDivElement>(null);
     const topLineRef = useRef<SVGPolylineElement>(null);
@@ -127,8 +126,8 @@ export default function Navbar() {
             <header className="sticky top-0 z-[100] flex h-12 items-center justify-between bg-background/40 backdrop-blur-3xl px-4 lg:px-6">
                 <div className="mx-auto flex w-full max-w-5xl items-center justify-between">
                     <Link to="/" className="flex items-center gap-2 text-lg font-semibold md:text-base lg:order-1" onClick={closeMenu}>
-                        <SynerthinkLogo className="h-10 w-10 pt-2" />
-                        <span className="sr-only">Synerthink</span>
+                        <HintLogo size={40} className="text-primary" />
+                        <span className="sr-only">HINT Protocol</span>
                     </Link>
                     <nav className="hidden md:flex flex-1 justify-center space-x-10 lg:order-2">
                         {NAV_LINKS.map(({ name, href }) => (

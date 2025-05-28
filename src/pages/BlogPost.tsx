@@ -1,182 +1,289 @@
-import React, { useEffect, useRef, lazy, Suspense } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import AnimatedBackground from '../components/AnimatedBackground';
+import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+// import { sdk } from '@farcaster/frame-sdk'; // sdk is unused
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import matter from 'gray-matter';
+import { ContributePanel } from '../components/ContributePanel';
 
-// Register GSAP plugin only once
-if (typeof window !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
+// Interface for blog post data (frontmatter + content)
+interface BlogPostData {
+  slug: string;
+  title: string;
+  date: string;
+  category: string;
+  author: string;
+  authorRole: string;
+  readTime: string;
+  excerpt?: string; // Excerpt is optional in frontmatter
+  content: string; // This will be the main markdown content
 }
 
-// Lazy load sections
-const TechnicalArchitecture = lazy(() => import('../components/blog/TechnicalArchitecture'));
-const DotVariants = lazy(() => import('../components/blog/DotVariants'));
-const DevelopmentExperience = lazy(() => import('../components/blog/DevelopmentExperience'));
-const FutureGoals = lazy(() => import('../components/blog/FutureGoals'));
+// Function to load a blog post from a markdown file
+async function loadBlogPost(slug: string): Promise<BlogPostData | null> {
+  try {
+    console.log(`Attempting to load blog post: /content/blog/${slug}.md`);
+    const markdownModule = await import(`../content/blog/${slug}.md?raw`);
+    const rawContent = markdownModule.default;
 
-const BlogPost: React.FC = () => {
-    const mainContentRef = useRef<HTMLDivElement>(null);
-    const headingRef = useRef<HTMLDivElement>(null);
-    const descriptionRef = useRef<HTMLDivElement>(null);
-    const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+    // Parse frontmatter and content
+    const { data, content: mainContent } = matter(rawContent);
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            // Initial animations for the hero section with optimized settings
-            gsap.from(headingRef.current, {
-                y: 50,
-                opacity: 0,
-                duration: 1.2,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: headingRef.current,
-                    start: "top bottom-=100",
-                    end: "top center",
-                    toggleActions: "play none none reverse",
-                    fastScrollEnd: true,
-                    preventOverlaps: true
-                }
-            });
-
-            gsap.from(descriptionRef.current, {
-                y: 50,
-                opacity: 0,
-                duration: 1.2,
-                delay: 0.2,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: descriptionRef.current,
-                    start: "top bottom-=100",
-                    end: "top center",
-                    toggleActions: "play none none reverse",
-                    fastScrollEnd: true,
-                    preventOverlaps: true
-                }
-            });
-
-            // Animate sections as they come into view with optimized settings
-            sectionRefs.current.forEach((section, index) => {
-                if (section) {
-                    gsap.from(section, {
-                        y: 50,
-                        opacity: 0,
-                        duration: 1.2,
-                        delay: index * 0.1,
-                        ease: "power3.out",
-                        scrollTrigger: {
-                            trigger: section,
-                            start: "top bottom-=100",
-                            end: "top center",
-                            toggleActions: "play none none reverse",
-                            fastScrollEnd: true,
-                            preventOverlaps: true
-                        }
-                    });
-                }
-            });
-        }, mainContentRef);
-
-        return () => {
-            ctx.revert();
-        };
-    }, []);
-
-    const setSectionRef = (index: number) => (el: HTMLDivElement | null) => {
-        sectionRefs.current[index] = el;
+    // Construct the BlogPostData object
+    const postData: BlogPostData = {
+      slug: slug,
+      title: data.title || 'Untitled Post',
+      date: data.date || new Date().toLocaleDateString(),
+      category: data.category || 'Uncategorized',
+      author: data.author || 'Anonymous',
+      authorRole: data.authorRole || '',
+      readTime: data.readTime || 'N/A',
+      excerpt: data.excerpt || '',
+      content: mainContent,
     };
 
+    console.log('Successfully parsed blog post:', postData.title);
+    return postData;
+  } catch (error) {
+    console.error('Error loading blog post:', error);
+    return null;
+  }
+}
+
+export default function BlogPost() {
+  const { slug } = useParams<{ slug: string }>();
+  const [post, setPost] = useState<BlogPostData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      if (!slug) {
+        setError('No blog post slug provided.');
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        const loadedPostData = await loadBlogPost(slug);
+        if (loadedPostData) {
+          setPost(loadedPostData);
+          setError(null); 
+        } else {
+          setError(`Blog post "${slug}" not found or failed to load.`);
+          setPost(null);
+        }
+      } catch (e: any) {
+        console.error('Error in fetchPost:', e);
+        setError(`Failed to load blog post: ${e.message || 'Unknown error'}`);
+        setPost(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [slug]);
+  const [showContributePanel, setShowContributePanel] = useState(false);
+
+  if (isLoading) {
     return (
-        <>
-            <title>Introducing Dotlanth | Synerthink Blog</title>
-            <meta name="description" content="Learn about our vision for simplifying software development with Dotlanth, a new foundation for your software projects." />
-            <meta name="keywords" content="Dotlanth, Synerthink, software development, technology, innovation, software foundation" />
-            <meta property="og:title" content="Introducing Dotlanth | Synerthink Blog" />
-            <meta property="og:description" content="Learn about our vision for simplifying software development with Dotlanth, a new foundation for your software projects." />
-            <meta property="og:type" content="article" />
-            <meta property="article:published_time" content="2025-05-01" />
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:title" content="Introducing Dotlanth | Synerthink Blog" />
-            <meta name="twitter:description" content="Learn about our vision for simplifying software development with Dotlanth, a new foundation for your software projects." />
-
-            <main className="relative min-h-screen flex flex-col bg-background text-foreground overflow-hidden transition-colors">
-                {/* Hero Section with Animated Background */}
-                <div className="relative w-full flex items-center justify-center min-h-[60vh] px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32">
-                    <div className="absolute inset-0">
-                        <AnimatedBackground />
-                    </div>
-                    <div className="absolute inset-0 mx-2 my-4 md:mx-4 lg:mx-8 xl:mx-12 bg-background/40 backdrop-blur-sm rounded-3xl" style={{ pointerEvents: 'auto' }} />
-                    <div ref={mainContentRef} className="relative flex flex-col justify-center items-center w-full h-full min-h-[40vh] max-w-4xl mx-auto px-2 sm:px-6 md:px-12 lg:px-20 py-8 sm:py-12 z-10">
-                        <div ref={headingRef} className="w-full flex flex-col gap-1 sm:gap-2 items-center">
-                            <h1 className="text-center text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground">
-                                Introducing Dotlanth
-                            </h1>
-                        </div>
-                        <div ref={descriptionRef} className="w-full max-w-3xl flex flex-col gap-8 sm:gap-8 items-center mt-8">
-                            <p className="text-center text-lg sm:text-xl md:text-2xl font-light text-foreground leading-relaxed">
-                                At Synerthink, we believe building software should be simpler. Much simpler. For a long time, developers have had to wrestle with a lot of complexity that gets in the way of actually creating. We think there's a better way.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Main Content */}
-                <div className="max-w-4xl mx-auto px-4 py-8">
-                    <article className="prose prose-lg dark:prose-invert">
-                        {/* What is Dotlanth Section */}
-                        <div ref={setSectionRef(0)} className="mb-16">
-                            <h2 className="text-3xl font-semibold mb-6">So, what is Dotlanth?</h2>
-                            <p className="mb-6">
-                                Think of it as a new foundation for your software projects. We're taking ideas from how virtual machines work and applying them to everyday software development, but without the blockchain part. Our goal is to let you write your business logic – the actual rules and processes that make your application work – and have it run easily and efficiently.
-                            </p>
-                            <div className="bg-gray-100 dark:bg-neutral-900 p-6 rounded-lg mb-6">
-                                <h3 className="text-xl font-semibold mb-4">What is a Dot?</h3>
-                                <p className="mb-4">
-                                    A Dot is a unit of logic on Dotlanth – lightweight, composable, and infinitely scalable. It's the fundamental building block of your application, representing a single piece of business logic that can be combined with other dots to create complex systems.
-                                </p>
-                                <p>
-                                    Dots come in different variants to serve specific purposes:
-                                </p>
-                                <ul className="list-disc pl-6 space-y-2 mt-4">
-                                    <li><strong>ParaDots</strong> – Parallelizable dots for high-performance computing</li>
-                                    <li><strong>DataDots</strong> – Dots that act as schemas and data sources</li>
-                                    <li><strong>UILinks</strong> – Auto-bound UI components to dots</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        {/* Lazy loaded sections */}
-                        <Suspense fallback={<div className="min-h-[200px]" />}>
-                            <TechnicalArchitecture ref={setSectionRef(1)} />
-                        </Suspense>
-
-                        <Suspense fallback={<div className="min-h-[200px]" />}>
-                            <DotVariants ref={setSectionRef(2)} />
-                        </Suspense>
-
-                        <Suspense fallback={<div className="min-h-[200px]" />}>
-                            <DevelopmentExperience ref={setSectionRef(3)} />
-                        </Suspense>
-
-                        <Suspense fallback={<div className="min-h-[200px]" />}>
-                            <FutureGoals ref={setSectionRef(4)} />
-                        </Suspense>
-
-                        {/* Call to Action */}
-                        <div ref={setSectionRef(5)} className="text-center mt-16">
-                            <h2 className="text-3xl font-semibold mb-6">Join Us in Building the Future</h2>
-                            <p className="mb-8 text-lg">
-                                We're excited to build this future with you. Stay tuned for updates as we continue to develop Dotlanth.
-                            </p>
-                            <p className="text-gray-600 dark:text-gray-400">
-                                Thanks,<br />
-                                The Synerthink Team
-                            </p>
-                        </div>
-                    </article>
-                </div>
-            </main>
-        </>
+      <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center px-6">
+        <div className="text-center max-w-xl">
+          <h1 className="text-2xl font-medium mb-3">Loading Article...</h1>
+          <p className="text-muted-foreground mb-8">
+            Please wait while we load the article content.
+          </p>
+        </div>
+      </div>
     );
-};
+  }
 
-export default BlogPost; 
+  if (error) {
+    return (
+      <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center px-6">
+        <div className="text-center max-w-xl bg-destructive/10 text-destructive p-8 rounded-lg">
+          <h1 className="text-2xl font-medium mb-3">Error Loading Article</h1>
+          <p className="mb-8">
+            {error}
+          </p>
+          <Link 
+            to="/blog" 
+            className="inline-flex items-center text-destructive-foreground hover:underline"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-1">
+              <path fillRule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clipRule="evenodd" />
+            </svg>
+            Back to Articles
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center px-6">
+        <div className="text-center max-w-xl">
+          <h1 className="text-2xl font-medium mb-3">Article Not Found</h1>
+          <p className="text-muted-foreground mb-8">
+            We couldn't find the article you're looking for.
+          </p>
+          <Link 
+            to="/blog" 
+            className="inline-flex items-center text-primary hover:underline"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-1">
+              <path fillRule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clipRule="evenodd" />
+            </svg>
+            Back to Articles
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Markdown rendering function removed as we're using direct HTML now
+
+  return (
+    <div className="min-h-screen pb-24">
+      {/* Hero section with gradient text title */}
+      <div className="relative bg-secondary/30 dark:bg-card/30 pt-16 pb-12">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent"></div>
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-3xl mx-auto animate-[fade-in_0.8s_ease-out_forwards]">
+            <span className="text-xs font-medium text-primary/80 uppercase tracking-wider">{post.category}</span>
+            
+            <h1 className="text-3xl md:text-5xl font-medium tracking-tight mt-3 mb-5 bg-clip-text text-transparent bg-gradient-to-br from-primary via-primary/90 to-primary/70">
+              {post.title}
+            </h1>
+            
+            <div className="flex items-center text-sm text-muted-foreground">
+              <div className="flex items-center">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium mr-2">
+                  {post.author.charAt(0)}
+                </div>
+                <div>
+                  <a href="https://farcaster.xyz/ademclk" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground hover:text-primary">{post.author}</a>
+                  <span className="mx-1">·</span>
+                  <span>{post.authorRole}</span>
+                </div>
+              </div>
+              <span className="mx-3">|</span>
+              <div className="flex items-center">
+                <time>{post.date}</time>
+                <span className="mx-1">·</span>
+                <span>{post.readTime}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Article content */}
+      <div className="container mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Main content */}
+          <article className="lg:col-span-8 lg:col-start-3 animate-[fade-in_1s_ease-out_0.3s_forwards]">
+            <div className="article-content max-w-none bg-card/20 dark:bg-card/10 rounded-xl p-8 shadow-sm">
+              <div className="article-markdown prose prose-lg dark:prose-invert max-w-none text-foreground dark:text-foreground">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: ({node, ...props}) => <h1 className="text-4xl font-bold mt-12 mb-6 text-primary dark:text-primary leading-tight" {...props} />,
+                    h2: ({node, ...props}) => <h2 className="text-3xl font-semibold mt-10 mb-5 text-foreground dark:text-foreground leading-snug" {...props} />,
+                    h3: ({node, ...props}) => <h3 className="text-2xl font-semibold mt-8 mb-4 text-foreground dark:text-foreground leading-snug" {...props} />,
+                    p: ({node, ...props}) => <p className="text-lg text-muted-foreground dark:text-muted-foreground mb-6 leading-relaxed" {...props} />,
+                    ul: ({node, ...props}) => <ul className="list-disc list-inside mb-6 pl-4 text-lg text-muted-foreground dark:text-muted-foreground space-y-2" {...props} />,
+                    li: ({node, ...props}) => <li className="leading-relaxed" {...props} />,
+                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary dark:border-primary pl-6 py-2 my-6 italic text-xl text-foreground dark:text-foreground bg-primary/5 dark:bg-primary/5 rounded-r-md" {...props} />,
+                    // You can add more custom renderers for other elements like code, a, etc.
+                  }}
+                >
+                  {post.content}
+                </ReactMarkdown>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div className="max-w-3xl mx-auto mt-12">
+          {showContributePanel ? (
+            <div className="animate-[fade-in_0.3s_ease-out_forwards]">
+              <ContributePanel 
+                conceptId={post.slug} 
+                conceptName={post.title}
+                onClose={() => setShowContributePanel(false)}
+              />
+            </div>
+          ) : (
+            <div className="bg-secondary/30 dark:bg-card/30 rounded-2xl p-6 md:p-8 text-center">
+              <h3 className="text-xl font-medium mb-2">Human In The Loop</h3>
+              <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
+                Help improve our quantum explanations by sharing your understanding.
+                Your contribution matters in building a better learning experience for everyone.
+              </p>
+              <button
+                onClick={() => setShowContributePanel(true)}
+                className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground font-medium text-base rounded-full shadow-sm hover:bg-primary/90 transition-all duration-200 ease-in-out hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Contribute Your Perspective
+              </button>
+            </div>
+          )}
+        </div>
+
+        
+        <div className="max-w-3xl mx-auto mt-8">
+          <button
+            onClick={async () => {
+              if (!post) return; // Ensure post is defined
+              try {
+                // Use Farcaster SDK to compose a cast about this article
+                // await sdk.actions.composeCast({
+                //   text: `I'm reading "${post.title}" on HINT Protocol - a new approach to quantum education where humans help refine explanations through shared understanding.`,
+                //   embeds: [`https://ademonurcelik.github.io/hint/blog/${post.slug}`]
+                // });
+                console.log('Farcaster SDK action call commented out.');
+              } catch (error) {
+                console.error('Error casting:', error);
+              }
+            }}
+            className="w-full flex items-center justify-center px-5 py-3 bg-primary text-primary-foreground font-medium rounded-xl hover:bg-primary/90 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
+          >
+            Cast about this article
+          </button>
+        </div>
+       
+        
+        {/* Article footer */}
+        <div className="max-w-3xl mx-auto mt-8 pt-8 border-t border-border">
+          <div className="flex justify-between items-center">
+            <Link 
+              to="/blog" 
+              className="inline-flex items-center text-primary hover:underline"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-1">
+                <path fillRule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clipRule="evenodd" />
+              </svg>
+              Back to Articles
+            </Link>
+
+            <div className="flex space-x-3">
+              <button className="p-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-foreground/70">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185z" />
+                </svg>
+              </button>
+              <button className="p-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-foreground/70">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
