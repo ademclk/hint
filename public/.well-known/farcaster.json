@@ -7,6 +7,7 @@
     "buttonTitle": "Explore HINT",
     "splashImageUrl": "https://raw.githubusercontent.com/ademclk/hint/refs/heads/main/public/hint-splash.png",
     "splashBackgroundColor": "#ececec",
+    "heroImageUrl": "https://raw.githubusercontent.com/ademclk/hint/refs/heads/main/public/hint-hero.png",
     "subtitle": "Human In The Loop",
     "description": "A collaborative approach to quantum education where humans help refine explanations through shared understanding.",
     "primaryCategory": "education",
