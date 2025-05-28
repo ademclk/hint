@@ -7,11 +7,11 @@
   "frame": {
     "version": "1",
     "name": "HINT",
-    "homeUrl": "https://hint.synerthink.com/",
     "iconUrl": "https://raw.githubusercontent.com/ademclk/hint/refs/heads/main/public/hint-logo.png",
-    "buttonTitle": "Explore HINT",
     "splashImageUrl": "https://raw.githubusercontent.com/ademclk/hint/refs/heads/main/public/hint-splash.png",
     "splashBackgroundColor": "#ececec",
+    "homeUrl": "https://hint.synerthink.com/",
+    "buttonTitle": "Explore HINT",
     "subtitle": "Human In The Loop",
     "description": "A collaborative approach to quantum education where humans help refine explanations through shared understanding.",
     "primaryCategory": "education",
@@ -21,8 +21,9 @@
       "science",
       "physics"
     ],
+    "heroImageUrl": "https://raw.githubusercontent.com/ademclk/hint/refs/heads/main/public/hint-hero.png",
     "tagline": "Explore the quantum world.",
-    "ogTitle": "HINT - Human In The Loop",
+    "ogTitle": "HINT",
     "ogDescription": "Discover quantum computing where your participation matters."
   }
 }
