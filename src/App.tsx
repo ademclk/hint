@@ -2,7 +2,7 @@ import './App.css';
 import { ThemeProvider } from './components/theme-provider';
 import { Route, Routes } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
-import BottomNavbar from './components/BottomNavbar';
+import Navbar from './components/Navbar'; // Changed import
 import ScrollToTop from './components/ScrollToTop';
 
 // Lazy load page components
@@ -39,8 +39,10 @@ function App() {
   
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <Navbar /> {/* Added new Navbar here */}
       <ScrollToTop />
-      <div className="pb-16"> {/* Main content wrapper with bottom padding for BottomNavbar */}
+      {/* Removed pb-16 from the div below */}
+      <div className=""> {/* Main content wrapper */}
         <Suspense fallback={<div className='flex justify-center items-center h-screen w-full'><p>Loading...</p></div>}>
           <Routes>
             <Route path='/' element={<Home />} />
@@ -52,7 +54,7 @@ function App() {
           </Routes>
         </Suspense>
       </div> {/* End of main content wrapper */}
-      <BottomNavbar />
+      {/* BottomNavbar instance removed */}
     </ThemeProvider>
   );
 }
