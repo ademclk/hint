@@ -184,11 +184,11 @@ export default function BlogPost() {
                     h1: ({node, ...props}) => <h2 className="text-2xl md:text-3xl font-semibold mt-12 mb-6" {...props} />, // h1 in body styled as h2
                     h2: ({node, ...props}) => <h2 className="text-2xl md:text-3xl font-semibold mt-12 mb-6" {...props} />,
                     h3: ({node, ...props}) => <h3 className="text-xl md:text-2xl font-semibold mt-10 mb-5" {...props} />,
-                    p: ({node, ...props}) => <p className="text-base md:text-lg mb-6 leading-loose" {...props} />, {/* Increased line height to leading-loose */}
+                    p: ({node, ...props}) => <p className="text-base md:text-lg mb-6 leading-loose" {...props} />,
                     ul: ({node, ...props}) => <ul className="list-disc list-inside mb-6 pl-4 text-base md:text-lg space-y-2" {...props} />,
                     ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-6 pl-4 text-base md:text-lg space-y-2" {...props} />,
                     li: ({node, ...props}) => <li className="leading-relaxed" {...props} />,
-                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary pl-6 py-2 my-8 italic text-lg md:text-xl" {...props} />, {/* Removed background, adjusted padding/margins */}
+                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary pl-6 py-2 my-8 italic text-lg md:text-xl" {...props} />,
                     a: ({node, ...props}) => <a className="text-primary hover:underline" {...props} />,
                     // TODO: Add styles for code/pre if needed, though prose should handle basic monospace.
                   }}
