@@ -141,32 +141,29 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen pb-24">
-      {/* Hero section with gradient text title */}
-      <div className="relative bg-secondary/30 dark:bg-card/30 pt-16 pb-12">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent"></div>
+      {/* Header Section */}
+      <div className="bg-background pt-20 pb-16"> {/* Increased padding, removed background image/gradient classes */}
+        {/* Removed absolute positioned div for gradient */}
         <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-3xl mx-auto animate-[fade-in_0.8s_ease-out_forwards]">
-            <span className="text-xs font-medium text-primary/80 uppercase tracking-wider">{post.category}</span>
+          <div className="max-w-2xl mx-auto text-center animate-[fade-in_0.8s_ease-out_forwards]"> {/* Centered text, narrower width */}
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{post.category}</span> {/* More subtle category */}
             
-            <h1 className="text-3xl md:text-5xl font-medium tracking-tight mt-3 mb-5 bg-clip-text text-transparent bg-gradient-to-br from-primary via-primary/90 to-primary/70">
+            <h1 className="text-4xl md:text-6xl font-semibold tracking-tight mt-4 mb-8 text-foreground"> {/* Increased title font size, solid text color, adjusted margins */}
               {post.title}
             </h1>
             
-            <div className="flex items-center text-sm text-muted-foreground">
+            <div className="flex items-center justify-center text-xs text-muted-foreground"> {/* Centered, smaller font for author/date */}
               <div className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium mr-2">
-                  {post.author.charAt(0)}
-                </div>
+                {/* Removed author avatar circle */}
                 <div>
                   <a href="https://farcaster.xyz/ademclk" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground hover:text-primary">{post.author}</a>
-                  <span className="mx-1">·</span>
-                  <span>{post.authorRole}</span>
+                  {/* Removed authorRole span, simplifying display */}
                 </div>
               </div>
-              <span className="mx-3">|</span>
+              <span className="mx-2">·</span> {/* Adjusted spacer */}
               <div className="flex items-center">
                 <time>{post.date}</time>
-                <span className="mx-1">·</span>
+                <span className="mx-2">·</span> {/* Adjusted spacer */}
                 <span>{post.readTime}</span>
               </div>
             </div>
@@ -175,23 +172,25 @@ export default function BlogPost() {
       </div>
 
       {/* Article content */}
-      <div className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="container mx-auto px-6 py-16"> {/* Increased py padding */}
+        <div className="max-w-2xl mx-auto"> {/* Centered article column */}
           {/* Main content */}
-          <article className="lg:col-span-8 lg:col-start-3 animate-[fade-in_1s_ease-out_0.3s_forwards]">
-            <div className="article-content max-w-none p-8 dark:bg-card/10 dark:rounded-xl dark:shadow-sm">
+          <article className="animate-[fade-in_1s_ease-out_0.3s_forwards]"> {/* Removed col-span classes */}
+            <div className="article-content"> {/* Removed padding and background from here, will be handled by prose styles or direct element styling */}
               <div className="article-markdown prose prose-lg dark:prose-invert max-w-none text-foreground dark:text-foreground">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
-                    h1: ({node, ...props}) => <h1 className="text-3xl md:text-4xl font-bold mt-12 mb-6 text-primary dark:text-primary leading-tight" {...props} />,
-                    h2: ({node, ...props}) => <h2 className="text-2xl md:text-3xl font-semibold mt-10 mb-5 text-foreground dark:text-foreground leading-snug" {...props} />,
-                    h3: ({node, ...props}) => <h3 className="text-xl md:text-2xl font-semibold mt-8 mb-4 text-foreground dark:text-foreground leading-snug" {...props} />,
-                    p: ({node, ...props}) => <p className="text-base md:text-lg text-muted-foreground dark:text-muted-foreground mb-6 leading-relaxed" {...props} />,
-                    ul: ({node, ...props}) => <ul className="list-disc list-inside mb-6 pl-4 text-base md:text-lg text-muted-foreground dark:text-muted-foreground space-y-2" {...props} />,
+                    h1: ({node, ...props}) => <h2 className="text-2xl md:text-3xl font-semibold mt-12 mb-6" {...props} />, // h1 in body styled as h2
+                    h2: ({node, ...props}) => <h2 className="text-2xl md:text-3xl font-semibold mt-12 mb-6" {...props} />,
+                    h3: ({node, ...props}) => <h3 className="text-xl md:text-2xl font-semibold mt-10 mb-5" {...props} />,
+                    p: ({node, ...props}) => <p className="text-base md:text-lg mb-6 leading-loose" {...props} />, {/* Increased line height to leading-loose */}
+                    ul: ({node, ...props}) => <ul className="list-disc list-inside mb-6 pl-4 text-base md:text-lg space-y-2" {...props} />,
+                    ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-6 pl-4 text-base md:text-lg space-y-2" {...props} />,
                     li: ({node, ...props}) => <li className="leading-relaxed" {...props} />,
-                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary dark:border-primary pl-6 py-2 my-6 italic text-lg md:text-xl text-foreground dark:text-foreground bg-primary/5 dark:bg-primary/5 rounded-r-md" {...props} />,
-                    // You can add more custom renderers for other elements like code, a, etc.
+                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary pl-6 py-2 my-8 italic text-lg md:text-xl" {...props} />, {/* Removed background, adjusted padding/margins */}
+                    a: ({node, ...props}) => <a className="text-primary hover:underline" {...props} />,
+                    // TODO: Add styles for code/pre if needed, though prose should handle basic monospace.
                   }}
                 >
                   {post.content}
@@ -199,59 +198,24 @@ export default function BlogPost() {
               </div>
             </div>
           </article>
+          {/* Author/Date/Read Time metadata could be moved here later if desired */}
         </div>
-        <div className="max-w-3xl mx-auto mt-12">
-          {showContributePanel ? (
-            <div className="animate-[fade-in_0.3s_ease-out_forwards]">
-              <ContributePanel 
-                conceptId={post.slug} 
-                conceptName={post.title}
-                onClose={() => setShowContributePanel(false)}
-              />
-            </div>
-          ) : (
-            <div className="bg-secondary/30 dark:bg-card/30 rounded-2xl p-6 md:p-8 text-center">
-              <h3 className="text-xl font-medium mb-2">Human In The Loop</h3>
-              <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-                Help improve our quantum explanations by sharing your understanding.
-                Your contribution matters in building a better learning experience for everyone.
-              </p>
-              <button
-                onClick={() => setShowContributePanel(true)}
-                className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground font-medium text-base rounded-full shadow-sm hover:bg-primary/90 transition-all duration-200 ease-in-out hover:scale-[1.02] active:scale-[0.98]"
-              >
-                Contribute Your Perspective
-              </button>
-            </div>
-          )}
+        <div className="max-w-2xl mx-auto mt-12 text-center"> {/* Centered, narrower width for this section */}
+          {/* Removed ContributePanel and its logic */}
+          <p className="mb-8 text-muted-foreground">
+            Have thoughts on this article? <a href="#" className="text-primary hover:underline">Contribute your perspective</a>.
+          </p>
         </div>
 
         
-        <div className="max-w-3xl mx-auto mt-8">
-          <button
-            onClick={async () => {
-              if (!post) return; // Ensure post is defined
-              try {
-                // Use Farcaster SDK to compose a cast about this article
-                // await sdk.actions.composeCast({
-                //   text: `I'm reading "${post.title}" on HINT Protocol - a new approach to quantum education where humans help refine explanations through shared understanding.`,
-                //   embeds: [`https://ademonurcelik.github.io/hint/blog/${post.slug}`]
-                // });
-                console.log('Farcaster SDK action call commented out.');
-              } catch (error) {
-                console.error('Error casting:', error);
-              }
-            }}
-            className="w-full flex items-center justify-center px-5 py-3 bg-primary text-primary-foreground font-medium rounded-xl hover:bg-primary/90 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
-          >
-            Cast about this article
-          </button>
+        <div className="max-w-2xl mx-auto mt-8"> {/* Narrower width */}
+          {/* Removed "Cast about this article" button */}
         </div>
        
         
         {/* Article footer */}
-        <div className="max-w-3xl mx-auto mt-8 pt-8 border-t border-border">
-          <div className="flex justify-between items-center">
+        <div className="max-w-2xl mx-auto mt-8 pt-8 border-t border-border"> {/* Narrower width */}
+          <div className="flex justify-center items-center"> {/* Centered "Back to Articles" link */}
             <Link 
               to="/blog" 
               className="inline-flex items-center text-primary hover:underline"
@@ -262,18 +226,7 @@ export default function BlogPost() {
               Back to Articles
             </Link>
 
-            <div className="flex space-x-3">
-              <button className="p-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-foreground/70">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185z" />
-                </svg>
-              </button>
-              <button className="p-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-foreground/70">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0z" />
-                </svg>
-              </button>
-            </div>
+            {/* Removed social share buttons */}
           </div>
         </div>
       </div>
