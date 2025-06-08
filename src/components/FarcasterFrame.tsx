@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import {
     FARCASTER_APP_ID,
     FARCASTER_APP_SLUG,
-    buildFarcasterMiniAppUrl,
     createFarcasterFrameMetadata
 } from '@/utils/farcasterConfig';
 
@@ -30,90 +30,58 @@ export function FarcasterFrame({
 }: FarcasterFrameProps) {
     const location = useLocation();
 
-    // Get the current URL for content sharing
     const contentUrl = typeof window !== 'undefined'
         ? `${window.location.origin}${location.pathname}${location.search}`
         : '';
 
-    // Create the frame metadata using our utility function
     const frameMetadata = createFarcasterFrameMetadata({
         imageUrl: imageUrl,
         buttonTitle: buttonTitle,
-        targetUrl: contentUrl, // Use the current page URL
+        targetUrl: contentUrl,
         appName: "HINT",
         splashImageUrl: splashImageUrl,
         splashBackgroundColor: splashBackgroundColor
     });
 
-    // Stringify the metadata for the meta tag
     const frameMetadataString = JSON.stringify(frameMetadata);
 
-    useEffect(() => {
-        if (typeof document === 'undefined') return;
-
-        // Create or update the fc:frame meta tag
-        let metaTag = document.querySelector('meta[name="fc:frame"]');
-        if (!metaTag) {
-            metaTag = document.createElement('meta');
-            metaTag.setAttribute('name', 'fc:frame');
-            document.head.appendChild(metaTag);
-        }
-        metaTag.setAttribute('content', frameMetadataString);
-
-        // Also add Open Graph tags for better compatibility
-        const ogTags = [
-            { name: 'og:title', content: title },
-            { name: 'og:image', content: imageUrl },
-            { name: 'og:url', content: contentUrl },
-            { name: 'og:type', content: 'article' },
-            { name: 'twitter:card', content: 'summary_large_image' }
-        ];
-
-        ogTags.forEach(tag => {
-            let metaElement = document.querySelector(`meta[property="${tag.name}"]`);
-            if (!metaElement) {
-                metaElement = document.createElement('meta');
-                metaElement.setAttribute('property', tag.name);
-                document.head.appendChild(metaElement);
-            }
-            metaElement.setAttribute('content', tag.content);
-        });
-
-        // Cleanup function
-        return () => {
-            if (typeof document === 'undefined') return;
-            const frameMeta = document.querySelector('meta[name="fc:frame"]');
-            if (frameMeta) frameMeta.remove();
-        };
-    }, [title, imageUrl, contentUrl, frameMetadataString]);
-
     return (
-        <div className="relative w-full p-4 mt-8 mb-6 rounded-xl border border-primary/10 dark:border-primary/20 bg-primary/5 dark:bg-primary/10">
-            <div className="flex flex-col md:flex-row items-center gap-4">
-                <div className="flex-1">
-                    <h3 className="text-lg font-medium mb-2">Share this article on Farcaster</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                        This page is Farcaster Frame-enabled. Cast the URL to share it with the Farcaster community.
-                    </p>
-                    <div className="flex justify-center">
-                        <a
-                            href={`https://warpcast.com/~/compose?text=${encodeURIComponent(title)}&embeds[]=${encodeURIComponent(contentUrl)}`}
-                            className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Share on Farcaster
-                        </a>
+        <>
+            <Helmet>
+                <meta name="fc:frame" content={frameMetadataString} />
+                <meta property="og:title" content={title} />
+                <meta property="og:image" content={imageUrl} />
+                <meta property="og:url" content={contentUrl} />
+                <meta property="og:type" content="article" />
+                <meta name="twitter:card" content="summary_large_image" />
+            </Helmet>
+            <div className="relative w-full p-4 mt-8 mb-6 rounded-xl border border-primary/10 dark:border-primary/20 bg-primary/5 dark:bg-primary/10">
+                <div className="flex flex-col md:flex-row items-center gap-4">
+                    <div className="flex-1">
+                        <h3 className="text-lg font-medium mb-2">Share this article on Farcaster</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                            This page is Farcaster Frame-enabled. Cast the URL to share it with the Farcaster community.
+                        </p>
+                        <div className="flex justify-center">
+                            <a
+                                href={`https://warpcast.com/~/compose?text=${encodeURIComponent(title)}&embeds[]=${encodeURIComponent(contentUrl)}`}
+                                className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Share on Farcaster
+                            </a>
+                        </div>
+                    </div>
+                    <div className="w-24 h-24 rounded-lg overflow-hidden bg-card flex-shrink-0">
+                        <img
+                            src={splashImageUrl}
+                            alt="Frame preview"
+                            className="w-full h-full object-cover"
+                        />
                     </div>
                 </div>
-                <div className="w-24 h-24 rounded-lg overflow-hidden bg-card flex-shrink-0">
-                    <img
-                        src={splashImageUrl}
-                        alt="Frame preview"
-                        className="w-full h-full object-cover"
-                    />
-                </div>
             </div>
-        </div>
+        </>
     );
 } 
