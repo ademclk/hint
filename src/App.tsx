@@ -58,7 +58,6 @@ function App() {
           </Routes>
         </Suspense>
       </div> {/* End of main content wrapper */}
-      <BottomNavbar />
     </ThemeProvider>
   );
 }
