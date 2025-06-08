@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface FarcasterFrameProps {
@@ -22,20 +22,19 @@ export function FarcasterFrame({
     const currentUrl = typeof window !== 'undefined'
         ? customUrl || `${window.location.origin}${location.pathname}`
         : '';
-    const [showDebug, setShowDebug] = useState(false);
 
-    // Generate the frame metadata following Farcaster Frame spec
+    // Create the frame metadata exactly as specified in the documentation
     const frameMetadata = {
         version: "next",
-        imageUrl,
+        imageUrl: imageUrl,
         button: {
             title: buttonTitle,
             action: {
                 type: "launch_frame",
-                name: "HINT",
                 url: currentUrl,
-                splashImageUrl,
-                splashBackgroundColor
+                name: "HINT",
+                splashImageUrl: splashImageUrl,
+                splashBackgroundColor: splashBackgroundColor
             }
         }
     };
@@ -44,48 +43,39 @@ export function FarcasterFrame({
     const frameMetadataString = JSON.stringify(frameMetadata);
 
     useEffect(() => {
-        // Add the meta tag to the document head
-        const addMetaTag = () => {
-            if (typeof document === 'undefined') return;
+        if (typeof document === 'undefined') return;
 
-            // Create the meta tag or get existing
-            let metaTag = document.querySelector('meta[name="fc:frame"]');
-            if (!metaTag) {
-                metaTag = document.createElement('meta');
-                metaTag.setAttribute('name', 'fc:frame');
-                document.head.appendChild(metaTag);
+        // Create or update the fc:frame meta tag
+        let metaTag = document.querySelector('meta[name="fc:frame"]');
+        if (!metaTag) {
+            metaTag = document.createElement('meta');
+            metaTag.setAttribute('name', 'fc:frame');
+            document.head.appendChild(metaTag);
+        }
+        metaTag.setAttribute('content', frameMetadataString);
+
+        // Also add Open Graph tags for better compatibility
+        const ogTags = [
+            { name: 'og:title', content: title },
+            { name: 'og:image', content: imageUrl },
+            { name: 'og:url', content: currentUrl },
+            { name: 'og:type', content: 'article' },
+            { name: 'twitter:card', content: 'summary_large_image' }
+        ];
+
+        ogTags.forEach(tag => {
+            let metaElement = document.querySelector(`meta[property="${tag.name}"]`);
+            if (!metaElement) {
+                metaElement = document.createElement('meta');
+                metaElement.setAttribute('property', tag.name);
+                document.head.appendChild(metaElement);
             }
+            metaElement.setAttribute('content', tag.content);
+        });
 
-            // Set content attribute
-            metaTag.setAttribute('content', frameMetadataString);
-
-            // Add Open Graph tags for better sharing
-            const ogTags = [
-                { name: 'og:title', content: title },
-                { name: 'og:image', content: imageUrl },
-                { name: 'og:url', content: currentUrl },
-                { name: 'og:type', content: 'article' },
-                { name: 'twitter:card', content: 'summary_large_image' }
-            ];
-
-            ogTags.forEach(tag => {
-                let metaElement = document.querySelector(`meta[property="${tag.name}"]`);
-                if (!metaElement) {
-                    metaElement = document.createElement('meta');
-                    metaElement.setAttribute('property', tag.name);
-                    document.head.appendChild(metaElement);
-                }
-                metaElement.setAttribute('content', tag.content);
-            });
-        };
-
-        // Call function to add meta tags
-        addMetaTag();
-
-        // Cleanup function to remove meta tags on unmount
+        // Cleanup function
         return () => {
             if (typeof document === 'undefined') return;
-
             const frameMeta = document.querySelector('meta[name="fc:frame"]');
             if (frameMeta) frameMeta.remove();
         };
@@ -108,12 +98,6 @@ export function FarcasterFrame({
                         >
                             Cast to Farcaster
                         </a>
-                        <button
-                            onClick={() => setShowDebug(!showDebug)}
-                            className="text-xs text-muted-foreground hover:text-primary transition-colors"
-                        >
-                            {showDebug ? 'Hide Debug' : 'Show Debug'}
-                        </button>
                     </div>
                 </div>
                 <div className="w-24 h-24 rounded-lg overflow-hidden bg-card flex-shrink-0">
@@ -124,14 +108,6 @@ export function FarcasterFrame({
                     />
                 </div>
             </div>
-
-            {/* Debug information - conditionally displayed */}
-            {showDebug && (
-                <div className="mt-4 p-3 bg-muted/30 rounded-md text-xs text-muted-foreground">
-                    <p className="font-mono mb-1">Frame Metadata:</p>
-                    <pre className="overflow-auto">{frameMetadataString}</pre>
-                </div>
-            )}
         </div>
     );
 } 

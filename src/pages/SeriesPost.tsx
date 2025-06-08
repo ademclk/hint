@@ -297,13 +297,17 @@ export default function SeriesPost() {
                     <FarcasterFrame
                         title={getTitle()}
                         imageUrl={typeof window !== 'undefined'
-                            ? `${window.location.origin}/images/quantum-computers.svg`
-                            : 'https://hint.quantum.ademclk.com/images/quantum-computers.svg'
+                            ? `${window.location.origin}/images/quantum-card.svg`
+                            : 'https://hint.quantum.ademclk.com/images/quantum-card.svg'
                         }
                         buttonTitle="Read Full Post"
                         splashImageUrl={typeof window !== 'undefined'
                             ? `${window.location.origin}/logo.svg`
                             : 'https://hint.quantum.ademclk.com/logo.svg'
+                        }
+                        customUrl={typeof window !== 'undefined'
+                            ? window.location.href
+                            : undefined
                         }
                     />
 
