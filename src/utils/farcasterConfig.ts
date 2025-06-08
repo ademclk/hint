@@ -36,6 +36,41 @@ export function buildFarcasterMiniAppUrl(
 }
 
 /**
+ * Creates a properly formatted Farcaster Frame Embed object according to the spec
+ * This ensures the frame will be opened within the Farcaster client rather than a new tab
+ */
+export function createFarcasterFrameMetadata({
+    imageUrl,
+    buttonTitle = "🚩 Start",
+    targetUrl,
+    appName = "HINT",
+    splashImageUrl = "/logo.svg",
+    splashBackgroundColor = "#131313"
+}: {
+    imageUrl: string;
+    buttonTitle?: string;
+    targetUrl: string;
+    appName?: string;
+    splashImageUrl?: string;
+    splashBackgroundColor?: string;
+}) {
+    return {
+        version: "next",
+        imageUrl: imageUrl,
+        button: {
+            title: buttonTitle,
+            action: {
+                type: "launch_frame",
+                url: targetUrl,
+                name: appName,
+                splashImageUrl: splashImageUrl,
+                splashBackgroundColor: splashBackgroundColor
+            }
+        }
+    };
+}
+
+/**
  * Parses the current window location and returns a Farcaster mini app URL
  */
 export function getCurrentAsFarcasterUrl(): string | null {

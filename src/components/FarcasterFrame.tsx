@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { FARCASTER_APP_ID, FARCASTER_APP_SLUG, buildFarcasterMiniAppUrl } from '@/utils/farcasterConfig';
+import {
+    FARCASTER_APP_ID,
+    FARCASTER_APP_SLUG,
+    buildFarcasterMiniAppUrl,
+    createFarcasterFrameMetadata
+} from '@/utils/farcasterConfig';
 
 interface FarcasterFrameProps {
     title: string;
@@ -30,29 +35,15 @@ export function FarcasterFrame({
         ? `${window.location.origin}${location.pathname}${location.search}`
         : '';
 
-    // Get the mini app URL for Farcaster using our utility
-    const miniAppUrl = customUrl || buildFarcasterMiniAppUrl(
-        location.pathname,
-        location.search,
-        appId,
-        appSlug
-    );
-
-    // Create the frame metadata exactly as specified in the documentation
-    const frameMetadata = {
-        version: "next",
+    // Create the frame metadata using our utility function
+    const frameMetadata = createFarcasterFrameMetadata({
         imageUrl: imageUrl,
-        button: {
-            title: buttonTitle,
-            action: {
-                type: "launch_frame",
-                url: contentUrl, // Use the content URL for the frame
-                name: "HINT",
-                splashImageUrl: splashImageUrl,
-                splashBackgroundColor: splashBackgroundColor
-            }
-        }
-    };
+        buttonTitle: buttonTitle,
+        targetUrl: contentUrl, // Use the current page URL
+        appName: "HINT",
+        splashImageUrl: splashImageUrl,
+        splashBackgroundColor: splashBackgroundColor
+    });
 
     // Stringify the metadata for the meta tag
     const frameMetadataString = JSON.stringify(frameMetadata);
@@ -106,9 +97,7 @@ export function FarcasterFrame({
                     </p>
                     <div className="flex space-x-2">
                         <a
-                            href={`https://warpcast.com/~/compose?text=Check out this article: ${title}&embeds[]=${encodeURIComponent(miniAppUrl)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href={`https://warpcast.com/~/compose?text=Check out this article: ${title}&embeds[]=${encodeURIComponent(contentUrl)}`}
                             className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                         >
                             Cast to Farcaster

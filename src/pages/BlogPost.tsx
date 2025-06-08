@@ -62,7 +62,7 @@ export default function BlogPost() {
         const loadedPostData = await loadBlogPost(slug);
         if (loadedPostData) {
           setPost(loadedPostData);
-          setError(null); 
+          setError(null);
         } else {
           setError(`Blog post "${slug}" not found or failed to load.`);
           setPost(null);
@@ -101,8 +101,8 @@ export default function BlogPost() {
           <p className="mb-8">
             {error}
           </p>
-          <Link 
-            to="/blog" 
+          <Link
+            to="/blog"
             className="inline-flex items-center text-destructive-foreground hover:underline"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-1">
@@ -123,8 +123,8 @@ export default function BlogPost() {
           <p className="text-muted-foreground mb-8">
             We couldn't find the article you're looking for.
           </p>
-          <Link 
-            to="/blog" 
+          <Link
+            to="/blog"
             className="inline-flex items-center text-primary hover:underline"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-1">
@@ -147,11 +147,11 @@ export default function BlogPost() {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-3xl mx-auto animate-[fade-in_0.8s_ease-out_forwards]">
             <span className="text-xs font-medium text-primary/80 uppercase tracking-wider">{post.category}</span>
-            
+
             <h1 className="text-3xl md:text-5xl font-medium tracking-tight mt-3 mb-5 bg-clip-text text-transparent bg-gradient-to-br from-primary via-primary/90 to-primary/70">
               {post.title}
             </h1>
-            
+
             <div className="flex items-center text-sm text-muted-foreground">
               <div className="flex items-center">
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium mr-2">
@@ -184,13 +184,13 @@ export default function BlogPost() {
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
-                    h1: ({node, ...props}) => <h1 className="text-3xl md:text-4xl font-bold mt-12 mb-6 text-primary dark:text-primary leading-tight" {...props} />,
-                    h2: ({node, ...props}) => <h2 className="text-2xl md:text-3xl font-semibold mt-10 mb-5 text-foreground dark:text-foreground leading-snug" {...props} />,
-                    h3: ({node, ...props}) => <h3 className="text-xl md:text-2xl font-semibold mt-8 mb-4 text-foreground dark:text-foreground leading-snug" {...props} />,
-                    p: ({node, ...props}) => <p className="text-base md:text-lg text-muted-foreground dark:text-muted-foreground mb-6 leading-relaxed" {...props} />,
-                    ul: ({node, ...props}) => <ul className="list-disc list-inside mb-6 pl-4 text-base md:text-lg text-muted-foreground dark:text-muted-foreground space-y-2" {...props} />,
-                    li: ({node, ...props}) => <li className="leading-relaxed" {...props} />,
-                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary dark:border-primary pl-6 py-2 my-6 italic text-lg md:text-xl text-foreground dark:text-foreground bg-primary/5 dark:bg-primary/5 rounded-r-md" {...props} />,
+                    h1: ({ node, ...props }) => <h1 className="text-3xl md:text-4xl font-bold mt-12 mb-6 text-primary dark:text-primary leading-tight" {...props} />,
+                    h2: ({ node, ...props }) => <h2 className="text-2xl md:text-3xl font-semibold mt-10 mb-5 text-foreground dark:text-foreground leading-snug" {...props} />,
+                    h3: ({ node, ...props }) => <h3 className="text-xl md:text-2xl font-semibold mt-8 mb-4 text-foreground dark:text-foreground leading-snug" {...props} />,
+                    p: ({ node, ...props }) => <p className="text-base md:text-lg text-muted-foreground dark:text-muted-foreground mb-6 leading-relaxed" {...props} />,
+                    ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-6 pl-4 text-base md:text-lg text-muted-foreground dark:text-muted-foreground space-y-2" {...props} />,
+                    li: ({ node, ...props }) => <li className="leading-relaxed" {...props} />,
+                    blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-primary dark:border-primary pl-6 py-2 my-6 italic text-lg md:text-xl text-foreground dark:text-foreground bg-primary/5 dark:bg-primary/5 rounded-r-md" {...props} />,
                     // You can add more custom renderers for other elements like code, a, etc.
                   }}
                 >
@@ -203,8 +203,8 @@ export default function BlogPost() {
         <div className="max-w-3xl mx-auto mt-12">
           {showContributePanel ? (
             <div className="animate-[fade-in_0.3s_ease-out_forwards]">
-              <ContributePanel 
-                conceptId={post.slug} 
+              <ContributePanel
+                conceptId={post.slug}
                 conceptName={post.title}
                 onClose={() => setShowContributePanel(false)}
               />
@@ -226,34 +226,30 @@ export default function BlogPost() {
           )}
         </div>
 
-        
+
         <div className="max-w-3xl mx-auto mt-8">
           <button
             onClick={async () => {
               if (!post) return; // Ensure post is defined
-              try {
-                // Use Farcaster SDK to compose a cast about this article
-                // await sdk.actions.composeCast({
-                //   text: `I'm reading "${post.title}" on HINT Protocol - a new approach to quantum education where humans help refine explanations through shared understanding.`,
-                //   embeds: [`https://ademonurcelik.github.io/hint/blog/${post.slug}`]
-                // });
-                console.log('Farcaster SDK action call commented out.');
-              } catch (error) {
-                console.error('Error casting:', error);
-              }
+
+              // Create a Warpcast compose URL for sharing
+              const shareUrl = `https://warpcast.com/~/compose?text=I'm reading "${post.title}" on HINT Protocol - a new approach to quantum education where humans help refine explanations through shared understanding.&embeds[]=${encodeURIComponent(window.location.href)}`;
+
+              // Open the compose URL
+              window.location.href = shareUrl;
             }}
             className="w-full flex items-center justify-center px-5 py-3 bg-primary text-primary-foreground font-medium rounded-xl hover:bg-primary/90 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
           >
             Cast about this article
           </button>
         </div>
-       
-        
+
+
         {/* Article footer */}
         <div className="max-w-3xl mx-auto mt-8 pt-8 border-t border-border">
           <div className="flex justify-between items-center">
-            <Link 
-              to="/blog" 
+            <Link
+              to="/blog"
               className="inline-flex items-center text-primary hover:underline"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-1">
