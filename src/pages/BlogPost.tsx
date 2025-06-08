@@ -233,7 +233,7 @@ export default function BlogPost() {
               if (!post) return; // Ensure post is defined
 
               // Create a Warpcast compose URL for sharing
-              const shareUrl = `https://warpcast.com/~/compose?text=I'm reading "${post.title}" on HINT Protocol - a new approach to quantum education where humans help refine explanations through shared understanding.&embeds[]=${encodeURIComponent(window.location.href)}`;
+              const shareUrl = `https://farcaster.xyz/~/compose?text=I'm reading "${post.title}" on HINT Protocol - a new approach to quantum education where humans help refine explanations through shared understanding.&embeds[]=${encodeURIComponent(window.location.href)}`;
 
               // Open the compose URL
               window.location.href = shareUrl;
