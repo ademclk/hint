@@ -5,8 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "node ./scripts/generate-blog-data.mjs && vite build",
-		"lint": "eslint .",
+		"build": "vite build && node prerender.mjs",
+		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"preview": "vite preview"
 	},
 	"dependencies": {
