@@ -1,28 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 
-// Dynamically import data using a path relative to the script
-const seriesDataPath = path.resolve(process.cwd(), 'src/seriesData.json');
-const seriesData = JSON.parse(fs.readFileSync(seriesDataPath, 'utf-8'));
-
-// The root of the project for resolving paths
 const root = process.cwd();
-
-// The output directory after build
 const distPath = path.resolve(root, 'dist');
 const template = fs.readFileSync(path.resolve(distPath, 'index.html'), 'utf-8');
-
-// The base URL of the site
 const baseUrl = 'https://hint.synerthink.com';
 
-console.log('Starting prerendering...');
-
-seriesData.forEach((post) => {
-	// Determine the primary title (use 'en' as default)
-	const title = post.title.en || post.title.tr;
-	const postUrl = `${baseUrl}/series/${post.id}`;
-	const imageUrl = `${baseUrl}/images/quantum-card.svg`;
-
+// Function to create meta tags
+const createMetaTags = (title, url, imageUrl) => {
 	const frameMetadata = {
 		version: 'next',
 		imageUrl: imageUrl,
@@ -30,7 +15,7 @@ seriesData.forEach((post) => {
 			title: 'Read on HINT',
 			action: {
 				type: 'launch_frame',
-				url: postUrl,
+				url: url,
 				name: 'HINT',
 				splashImageUrl: `${baseUrl}/logo.svg`,
 				splashBackgroundColor: '#131313',
@@ -38,24 +23,56 @@ seriesData.forEach((post) => {
 		},
 	};
 
-	const metaTags = [
+	return [
 		`<meta property="og:title" content="${title}">`,
 		`<meta property="og:image" content="${imageUrl}">`,
 		`<meta property="fc:frame" content='${JSON.stringify(frameMetadata)}'>`,
-		`<meta property="og:url" content="${postUrl}">`,
+		`<meta property="og:url" content="${url}">`,
 		`<meta property="og:type" content="article">`,
 		`<meta name="twitter:card" content="summary_large_image">`,
 	].join('\n        ');
+};
 
-	const html = template.replace('</head>', `${metaTags}\n    </head>`);
+// Function to prerender a set of posts
+const prerenderPosts = (posts, pathPrefix) => {
+	posts.forEach((post) => {
+		const id = post.id || post.slug;
+		const title = post.title.en || post.title.tr || post.title;
+		const postUrl = `${baseUrl}/${pathPrefix}/${id}`;
+		const imageUrl = `${baseUrl}/images/quantum-card.svg`; // Common image for all
 
-	const dirPath = path.resolve(distPath, 'series', post.id);
-	if (!fs.existsSync(dirPath)) {
-		fs.mkdirSync(dirPath, { recursive: true });
-	}
+		// Fix asset paths for nested routes
+		// For a path like /series/foo, assets need to be loaded from ../../
+		const depth = pathPrefix.split('/').filter(Boolean).length + 1;
+		const relativePath = '../'.repeat(depth);
+		const fixedTemplate = template.replace(
+			/(src|href)="\//g,
+			`$1="${relativePath}`
+		);
 
-	fs.writeFileSync(path.resolve(dirPath, 'index.html'), html);
-	console.log(`Prerendered: /series/${post.id}`);
-});
+		const metaTags = createMetaTags(title, postUrl, imageUrl);
+		const html = fixedTemplate.replace('</head>', `${metaTags}\n    </head>`);
+
+		const dirPath = path.resolve(distPath, pathPrefix, id);
+		if (!fs.existsSync(dirPath)) {
+			fs.mkdirSync(dirPath, { recursive: true });
+		}
+
+		fs.writeFileSync(path.resolve(dirPath, 'index.html'), html);
+		console.log(`Prerendered: /${pathPrefix}/${id}`);
+	});
+};
+
+console.log('Starting prerendering...');
+
+// Prerender Series posts
+const seriesDataPath = path.resolve(root, 'src/seriesData.json');
+const seriesData = JSON.parse(fs.readFileSync(seriesDataPath, 'utf-8'));
+prerenderPosts(seriesData, 'series');
+
+// Prerender Blog posts
+const blogDataPath = path.resolve(root, 'src/blogData.json');
+const blogData = JSON.parse(fs.readFileSync(blogDataPath, 'utf-8'));
+prerenderPosts(blogData, 'blog');
 
 console.log('Prerendering finished.');
