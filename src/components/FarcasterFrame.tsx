@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import { sdk } from '@farcaster/frame-sdk';
 import {
     FARCASTER_APP_ID,
     FARCASTER_APP_SLUG,
@@ -44,6 +45,22 @@ export function FarcasterFrame({
 
     const frameMetadataString = JSON.stringify(frameMetadata);
 
+    const handleShareClick = async (event: React.MouseEvent<HTMLAnchorElement>) => {
+        try {
+            const isMiniApp = await sdk.isInMiniApp();
+            if (isMiniApp) {
+                event.preventDefault();
+                await sdk.actions.composeCast({
+                    text: title,
+                    embeds: [contentUrl],
+                });
+            }
+        } catch (error) {
+            console.error('Error composing cast:', error);
+            // Fallback to default browser behavior if SDK fails
+        }
+    };
+
     return (
         <>
             <meta name="fc:frame" content={frameMetadataString} />
@@ -66,6 +83,7 @@ export function FarcasterFrame({
                                 className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={handleShareClick}
                             >
                                 Share on Farcaster
                             </a>
