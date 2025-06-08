@@ -14,7 +14,7 @@ export function FarcasterFrame({
     const location = useLocation();
 
     const contentUrl = typeof window !== 'undefined'
-        ? `${window.location.origin}${location.pathname}${location.search}`
+        ? `${window.location.origin}${location.pathname}${location.search}/`
         : '';
 
     const handleShareClick = async (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -43,7 +43,7 @@ export function FarcasterFrame({
                     </p>
                     <div className="flex justify-center">
                         <a
-                            href={`https://warpcast.com/~/compose?text=${encodeURIComponent(title)}&embeds[]=${encodeURIComponent(contentUrl)}/`}
+                            href={`https://farcaster.xyz/~/compose?text=${encodeURIComponent(title)}&embeds[]=${encodeURIComponent(contentUrl)}`}
                             className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                             target="_blank"
                             rel="noopener noreferrer"
