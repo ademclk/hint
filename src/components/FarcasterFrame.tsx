@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { FARCASTER_APP_ID, FARCASTER_APP_SLUG, buildFarcasterMiniAppUrl } from '@/utils/farcasterConfig';
 
 interface FarcasterFrameProps {
     title: string;
@@ -8,6 +9,8 @@ interface FarcasterFrameProps {
     splashImageUrl?: string;
     splashBackgroundColor?: string;
     customUrl?: string;
+    appId?: string;
+    appSlug?: string;
 }
 
 export function FarcasterFrame({
@@ -16,12 +19,24 @@ export function FarcasterFrame({
     buttonTitle = "🚩 Start",
     splashImageUrl = "/logo.svg",
     splashBackgroundColor = "#131313",
-    customUrl
+    customUrl,
+    appId = FARCASTER_APP_ID,
+    appSlug = FARCASTER_APP_SLUG
 }: FarcasterFrameProps) {
     const location = useLocation();
-    const currentUrl = typeof window !== 'undefined'
-        ? customUrl || `${window.location.origin}${location.pathname}`
+
+    // Get the current URL for content sharing
+    const contentUrl = typeof window !== 'undefined'
+        ? `${window.location.origin}${location.pathname}${location.search}`
         : '';
+
+    // Get the mini app URL for Farcaster using our utility
+    const miniAppUrl = customUrl || buildFarcasterMiniAppUrl(
+        location.pathname,
+        location.search,
+        appId,
+        appSlug
+    );
 
     // Create the frame metadata exactly as specified in the documentation
     const frameMetadata = {
@@ -31,7 +46,7 @@ export function FarcasterFrame({
             title: buttonTitle,
             action: {
                 type: "launch_frame",
-                url: currentUrl,
+                url: contentUrl, // Use the content URL for the frame
                 name: "HINT",
                 splashImageUrl: splashImageUrl,
                 splashBackgroundColor: splashBackgroundColor
@@ -58,7 +73,7 @@ export function FarcasterFrame({
         const ogTags = [
             { name: 'og:title', content: title },
             { name: 'og:image', content: imageUrl },
-            { name: 'og:url', content: currentUrl },
+            { name: 'og:url', content: contentUrl },
             { name: 'og:type', content: 'article' },
             { name: 'twitter:card', content: 'summary_large_image' }
         ];
@@ -79,7 +94,7 @@ export function FarcasterFrame({
             const frameMeta = document.querySelector('meta[name="fc:frame"]');
             if (frameMeta) frameMeta.remove();
         };
-    }, [title, imageUrl, currentUrl, frameMetadataString]);
+    }, [title, imageUrl, contentUrl, frameMetadataString]);
 
     return (
         <div className="relative w-full p-4 mt-8 mb-6 rounded-xl border border-primary/10 dark:border-primary/20 bg-primary/5 dark:bg-primary/10">
@@ -91,7 +106,7 @@ export function FarcasterFrame({
                     </p>
                     <div className="flex space-x-2">
                         <a
-                            href={`https://warpcast.com/~/compose?text=Check out this article: ${title}&embeds[]=${encodeURIComponent(currentUrl)}`}
+                            href={`https://warpcast.com/~/compose?text=Check out this article: ${title}&embeds[]=${encodeURIComponent(miniAppUrl)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"

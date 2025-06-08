@@ -1,29 +1,14 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import seriesData from '../seriesData.json';
 import { SeriesTitleCard } from '@/components/SeriesTitleCard';
 import { FarcasterFrame } from '@/components/FarcasterFrame';
+import { SeriesEntry, loadSeriesIndex, loadSeriesContent, parseFrontmatter, convertMarkdownToHTML, getLocalizedContent } from '@/utils/contentLoader';
+import { FARCASTER_APP_ID, FARCASTER_APP_SLUG } from '@/utils/farcasterConfig';
 
 interface Language {
     code: string;
     name: string;
     flag: string;
-}
-
-interface SeriesEntry {
-    id: string;
-    title: string;
-    titleTr?: string;
-    part: number;
-    date: string;
-    excerpt: string;
-    excerptTr?: string;
-    coverImage?: string;
-    content: string | {
-        [key: string]: string;
-    };
-    languages?: string[];
-    defaultLanguage?: string;
 }
 
 // Available languages
@@ -35,73 +20,16 @@ const LANGUAGES: Language[] = [
 // User language preferences key for localStorage
 const USER_LANGUAGE_PREF = 'hint_user_language_preference';
 
-// Format the dates from ISO strings
-const formattedSeriesData: SeriesEntry[] = seriesData.map(entry => ({
-    ...entry,
-    date: new Date(entry.date).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    }),
-}));
-
-// Improved markdown to HTML converter
-function convertMarkdownToHTML(markdown: string) {
-    if (!markdown) return '';
-
-    // Process markdown into HTML with proper handling of all elements
-    let html = markdown
-        // Images - process these first to not interfere with other formatting
-        .replace(/!\[(.*?)\]\((.*?)\)/g, '<div class="my-8"><img src="$2" alt="$1" class="rounded-lg shadow-md mx-auto max-w-full" /></div>')
-
-        // Headers
-        .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold mt-8 mb-4">$1</h1>')
-        .replace(/^## (.*$)/gm, '<h2 class="text-2xl font-semibold mt-6 mb-3">$1</h2>')
-        .replace(/^### (.*$)/gm, '<h3 class="text-xl font-medium mt-5 mb-2">$1</h3>')
-
-        // Bold and italic
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-
-        // Lists
-        .replace(/^\- (.*$)/gm, '<li class="ml-4 mb-1">$1</li>')
-        .replace(/<\/li>\n<li/g, '</li>\n<li')
-        .replace(/(<li.*<\/li>)/s, '<ul class="my-4">$1</ul>')
-
-        // Blockquotes
-        .replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-primary/30 pl-4 py-1 my-4 text-muted-foreground italic">$1</blockquote>')
-
-        // Code blocks
-        .replace(/```([\s\S]*?)```/g, '<pre class="bg-muted/30 p-4 rounded-md overflow-x-auto my-4"><code>$1</code></pre>')
-
-        // Inline code
-        .replace(/`([^`]+)`/g, '<code class="bg-muted/30 px-1 py-0.5 rounded text-sm">$1</code>')
-
-        // Line breaks
-        .replace(/\n\n/g, '</p><p class="my-4">')
-
-        // Initial paragraph wrap
-        .replace(/^([^<].*)/gm, function (match) {
-            // Only wrap in <p> if it's not already wrapped in another HTML tag
-            if (!match.startsWith('<')) {
-                return '<p class="my-4">' + match;
-            }
-            return match;
-        });
-
-    // Final cleanup for any unwrapped paragraphs or stray tags
-    html = '<div class="prose-content">' + html + '</div>';
-    return html;
-}
-
 export default function SeriesPost() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const [post, setPost] = useState<SeriesEntry | null>(null);
+    const [content, setContent] = useState<string>('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [currentLanguage, setCurrentLanguage] = useState<string>('en');
     const [availableLanguages, setAvailableLanguages] = useState<Language[]>([]);
+    const [seriesData, setSeriesData] = useState<SeriesEntry[]>([]);
 
     // Handle back navigation
     const handleBackClick = (e: React.MouseEvent) => {
@@ -137,71 +65,156 @@ export default function SeriesPost() {
         };
 
         setCurrentLanguage(loadLanguagePreference());
+
+        // Load series index data for navigation
+        async function loadIndex() {
+            try {
+                const data = await loadSeriesIndex();
+                setSeriesData(data);
+            } catch (error) {
+                console.error('Failed to load series index', error);
+            }
+        }
+
+        loadIndex();
     }, []);
 
+    // Load post data when ID or language changes
     useEffect(() => {
-        // Simulate fetching data
-        const fetchData = () => {
+        async function fetchData() {
+            if (!id) return;
+
             setLoading(true);
-            setTimeout(() => {
-                const foundPost = formattedSeriesData.find(p => p.id === id);
-                if (foundPost) {
-                    setPost(foundPost);
+            setError(null);
 
-                    // Determine available languages for this post
-                    if (foundPost.languages && foundPost.languages.length > 0) {
-                        setAvailableLanguages(
-                            LANGUAGES.filter(lang =>
-                                foundPost.languages?.includes(lang.code)
-                            )
-                        );
+            try {
+                // Find the post metadata from the index
+                const indexData = await loadSeriesIndex();
+                const postData = indexData.find(post => post.id === id);
 
-                        // Check if current language is available for this post
-                        if (foundPost.languages && !foundPost.languages.includes(currentLanguage)) {
-                            // If not available, set to post's default language but don't persist this forced change
-                            setCurrentLanguage(foundPost.defaultLanguage || foundPost.languages[0]);
-                        }
-                    } else {
-                        setAvailableLanguages([LANGUAGES.find(lang => lang.code === 'en')!]);
-                    }
-
-                    setError(null);
-                } else {
+                if (!postData) {
                     setError("Episode not found");
+                    setLoading(false);
+                    return;
                 }
+
+                // Set post metadata
+                setPost(postData);
+
+                // Determine available languages for this post
+                if (postData.languages && postData.languages.length > 0) {
+                    setAvailableLanguages(
+                        LANGUAGES.filter(lang =>
+                            postData.languages?.includes(lang.code)
+                        )
+                    );
+
+                    // Check if current language is available for this post
+                    if (!postData.languages.includes(currentLanguage)) {
+                        // If not available, set to post's default language
+                        setCurrentLanguage(postData.defaultLanguage || postData.languages[0]);
+                    }
+                } else {
+                    setAvailableLanguages([LANGUAGES.find(lang => lang.code === 'en')!]);
+                }
+
+                // Load the actual content file
+                const markdownContent = await loadSeriesContent(id, currentLanguage);
+
+                if (!markdownContent) {
+                    setError("Content not available");
+                    setLoading(false);
+                    return;
+                }
+
+                // Parse the markdown content
+                const { content } = parseFrontmatter(markdownContent);
+                setContent(content);
+
+            } catch (error) {
+                console.error('Error loading post data:', error);
+                setError("Failed to load content");
+            } finally {
                 setLoading(false);
-            }, 300);
-        };
+            }
+        }
 
         fetchData();
     }, [id, currentLanguage]);
 
-    // Get content based on current language
-    const getContent = () => {
-        if (!post) return '';
+    // Load content when language changes
+    useEffect(() => {
+        async function loadContentForLanguage() {
+            if (!id || loading) return;
 
-        if (typeof post.content === 'string') {
-            return post.content;
+            try {
+                const markdownContent = await loadSeriesContent(id, currentLanguage);
+
+                if (!markdownContent) {
+                    console.error(`Content not available for language: ${currentLanguage}`);
+                    return;
+                }
+
+                // Parse the markdown content
+                const { content } = parseFrontmatter(markdownContent);
+                setContent(content);
+            } catch (error) {
+                console.error(`Error loading content for language ${currentLanguage}:`, error);
+            }
         }
 
-        // Return content in current language or fall back to default language
-        return post.content[currentLanguage] ||
-            post.content[post.defaultLanguage || 'en'] ||
-            '';
-    };
+        loadContentForLanguage();
+    }, [currentLanguage, id, loading]);
 
     // Get title based on current language
     const getTitle = () => {
-        if (currentLanguage === 'tr' && post?.titleTr) {
-            return post.titleTr;
-        }
-        return post?.title || '';
+        if (!post) return '';
+        return getLocalizedContent(post.title, currentLanguage, post.defaultLanguage || 'en');
     };
 
     // Navigation between episodes
     const navigateToEpisode = (episodeId: string) => {
         navigate(`/series/${episodeId}`);
     };
+
+    // Helper functions for navigation
+    function getSeriesLength() {
+        return seriesData.length;
+    }
+
+    function getPrevEpisodeId(currentId: string) {
+        const currentIndex = seriesData.findIndex(post => post.id === currentId);
+        if (currentIndex > 0) {
+            return seriesData[currentIndex - 1].id;
+        }
+        return currentId;
+    }
+
+    function getNextEpisodeId(currentId: string) {
+        const currentIndex = seriesData.findIndex(post => post.id === currentId);
+        if (currentIndex < seriesData.length - 1) {
+            return seriesData[currentIndex + 1].id;
+        }
+        return currentId;
+    }
+
+    function getPrevEpisodeTitle(currentId: string) {
+        const currentIndex = seriesData.findIndex(post => post.id === currentId);
+        if (currentIndex > 0) {
+            const prevPost = seriesData[currentIndex - 1];
+            return getLocalizedContent(prevPost.title, currentLanguage, prevPost.defaultLanguage || 'en');
+        }
+        return "";
+    }
+
+    function getNextEpisodeTitle(currentId: string) {
+        const currentIndex = seriesData.findIndex(post => post.id === currentId);
+        if (currentIndex < seriesData.length - 1) {
+            const nextPost = seriesData[currentIndex + 1];
+            return getLocalizedContent(nextPost.title, currentLanguage, nextPost.defaultLanguage || 'en');
+        }
+        return "";
+    }
 
     if (loading) {
         return (
@@ -283,12 +296,13 @@ export default function SeriesPost() {
                         title={post.title}
                         titleTr={post.titleTr}
                         currentLanguage={currentLanguage}
+                        defaultLanguage={post.defaultLanguage}
                     />
 
                     {/* Markdown content with improved formatting */}
                     <div className="prose prose-lg dark:prose-invert max-w-none">
                         <div
-                            dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(getContent()) }}
+                            dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(content) }}
                             className="markdown-content space-y-4"
                         />
                     </div>
@@ -305,10 +319,8 @@ export default function SeriesPost() {
                             ? `${window.location.origin}/logo.svg`
                             : 'https://hint.quantum.ademclk.com/logo.svg'
                         }
-                        customUrl={typeof window !== 'undefined'
-                            ? window.location.href
-                            : undefined
-                        }
+                        appId={FARCASTER_APP_ID}
+                        appSlug={FARCASTER_APP_SLUG}
                     />
 
                     {/* Navigation between episodes */}
@@ -376,41 +388,4 @@ export default function SeriesPost() {
             </div>
         </div>
     );
-}
-
-// Helper functions
-function getSeriesLength() {
-    return formattedSeriesData.length;
-}
-
-function getPrevEpisodeId(currentId: string) {
-    const currentIndex = formattedSeriesData.findIndex(post => post.id === currentId);
-    if (currentIndex > 0) {
-        return formattedSeriesData[currentIndex - 1].id;
-    }
-    return currentId;
-}
-
-function getNextEpisodeId(currentId: string) {
-    const currentIndex = formattedSeriesData.findIndex(post => post.id === currentId);
-    if (currentIndex < formattedSeriesData.length - 1) {
-        return formattedSeriesData[currentIndex + 1].id;
-    }
-    return currentId;
-}
-
-function getPrevEpisodeTitle(currentId: string) {
-    const currentIndex = formattedSeriesData.findIndex(post => post.id === currentId);
-    if (currentIndex > 0) {
-        return formattedSeriesData[currentIndex - 1].title;
-    }
-    return "";
-}
-
-function getNextEpisodeTitle(currentId: string) {
-    const currentIndex = formattedSeriesData.findIndex(post => post.id === currentId);
-    if (currentIndex < formattedSeriesData.length - 1) {
-        return formattedSeriesData[currentIndex + 1].title;
-    }
-    return "";
 } 

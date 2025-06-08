@@ -1,13 +1,21 @@
 import { useState, useEffect } from 'react';
+import { getLocalizedContent } from '@/utils/contentLoader';
 
 interface SeriesTitleCardProps {
     episodeNumber: number;
-    title: string;
+    title: string | { [key: string]: string };
     titleTr?: string;
     currentLanguage: string;
+    defaultLanguage?: string;
 }
 
-export function SeriesTitleCard({ episodeNumber, title, titleTr, currentLanguage }: SeriesTitleCardProps) {
+export function SeriesTitleCard({
+    episodeNumber,
+    title,
+    titleTr,
+    currentLanguage,
+    defaultLanguage = 'en'
+}: SeriesTitleCardProps) {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -15,8 +23,10 @@ export function SeriesTitleCard({ episodeNumber, title, titleTr, currentLanguage
         return () => setMounted(false);
     }, []);
 
-    // Get title in current language or fall back to English
-    const displayTitle = currentLanguage === 'tr' && titleTr ? titleTr : title;
+    // Get title in current language using the helper function
+    const displayTitle = typeof title === 'object'
+        ? getLocalizedContent(title, currentLanguage, defaultLanguage)
+        : (currentLanguage === 'tr' && titleTr ? titleTr : title);
 
     // Generate episode text based on language
     const episodeText = currentLanguage === 'tr' ? 'Bölüm' : 'Episode';

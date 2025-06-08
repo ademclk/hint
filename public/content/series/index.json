@@ -1,0 +1,18 @@
+[
+	{
+		"id": "do-aliens-use-computers",
+		"title": {
+			"en": "Do Aliens Use Computers?",
+			"tr": "Uzaylılar Bilgisayar Kullanır Mı?"
+		},
+		"part": 1,
+		"date": "2023-05-15T12:00:00.000Z",
+		"excerpt": {
+			"en": "Exploring the universal nature of computation and why advanced civilizations across the universe would likely discover computers.",
+			"tr": "Hesaplamanın evrensel doğasını ve evrendeki gelişmiş uygarlıkların neden büyük olasılıkla bilgisayarları keşfedeceğini inceliyoruz."
+		},
+		"languages": ["en", "tr"],
+		"defaultLanguage": "en",
+		"author": "Adem"
+	}
+]
