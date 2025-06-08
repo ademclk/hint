@@ -1,6 +1,5 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import {
     FARCASTER_APP_ID,
     FARCASTER_APP_SLUG,
@@ -47,14 +46,13 @@ export function FarcasterFrame({
 
     return (
         <>
-            <Helmet>
-                <meta name="fc:frame" content={frameMetadataString} />
-                <meta property="og:title" content={title} />
-                <meta property="og:image" content={imageUrl} />
-                <meta property="og:url" content={contentUrl} />
-                <meta property="og:type" content="article" />
-                <meta name="twitter:card" content="summary_large_image" />
-            </Helmet>
+            <meta name="fc:frame" content={frameMetadataString} />
+            <meta property="og:title" content={title} />
+            <meta property="og:image" content={imageUrl} />
+            <meta property="og:url" content={contentUrl} />
+            <meta property="og:type" content="article" />
+            <meta name="twitter:card" content="summary_large_image" />
+
             <div className="relative w-full p-4 mt-8 mb-6 rounded-xl border border-primary/10 dark:border-primary/20 bg-primary/5 dark:bg-primary/10">
                 <div className="flex flex-col md:flex-row items-center gap-4">
                     <div className="flex-1">
