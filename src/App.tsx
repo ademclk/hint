@@ -6,14 +6,14 @@ import BottomNavbar from './components/BottomNavbar';
 import ScrollToTop from './components/ScrollToTop';
 
 // Lazy load page components
-const Home = lazy(() => import('./pages/Home.tsx').then(module => ({ default: module.Home }))); // Named export
-const Solutions = lazy(() => import('./pages/Solutions.tsx')); // Default export
-const Resources = lazy(() => import('./pages/Resources.tsx')); // Default export
-const Blog = lazy(() => import('./pages/Blog.tsx')); // Default export
-const BlogPost = lazy(() => import('./pages/BlogPost.tsx')); // Default export
-const Series = lazy(() => import('./pages/Series.tsx')); // Default export
-const SeriesPost = lazy(() => import('./pages/SeriesPost.tsx')); // Default export
-const Experiments = lazy(() => import('./pages/Experiments').then(module => ({ default: module.Experiments }))); // Named export
+const Home = lazy(() => import('./pages/Home.tsx').then(module => ({ default: module.Home })));
+const Solutions = lazy(() => import('./pages/Solutions.tsx'));
+const Resources = lazy(() => import('./pages/Resources.tsx'));
+const Blog = lazy(() => import('./pages/Blog.tsx'));
+const BlogPost = lazy(() => import('./pages/BlogPost.tsx'));
+const Series = lazy(() => import('./pages/Series.tsx'));
+const SeriesPost = lazy(() => import('./pages/SeriesPost.tsx'));
+const Experiments = lazy(() => import('./pages/Experiments.tsx').then(module => ({ default: module.Experiments })));
 import { sdk } from '@farcaster/frame-sdk';
 import { useEffect } from 'react';
 import Navbar from './components/navbar.tsx';
@@ -58,6 +58,7 @@ function App() {
           </Routes>
         </Suspense>
       </div> {/* End of main content wrapper */}
+      <BottomNavbar />
     </ThemeProvider>
   );
 }

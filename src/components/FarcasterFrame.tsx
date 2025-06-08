@@ -95,12 +95,14 @@ export function FarcasterFrame({
                     <p className="text-sm text-muted-foreground mb-4">
                         This page is Farcaster Frame-enabled. Cast the URL to share it with the Farcaster community.
                     </p>
-                    <div className="flex space-x-2">
+                    <div className="flex justify-center">
                         <a
-                            href={`https://farcaster.xyz/~/compose?text=Check out this article: ${title}&embeds[]=${encodeURIComponent(contentUrl)}`}
+                            href={`https://warpcast.com/~/compose?text=${encodeURIComponent(title)}&embeds[]=${encodeURIComponent(contentUrl)}`}
                             className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                            target="_blank"
+                            rel="noopener noreferrer"
                         >
-                            Cast to Farcaster
+                            Share on Farcaster
                         </a>
                     </div>
                 </div>
