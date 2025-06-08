@@ -39,7 +39,7 @@ const prerenderPosts = (posts, pathPrefix) => {
 		const id = post.id || post.slug;
 		const title = post.title.en || post.title.tr || post.title;
 		const postUrl = `${baseUrl}/${pathPrefix}/${id}`;
-		const imageUrl = `${baseUrl}/images/quantum-card.svg`; // Common image for all
+		const imageUrl = `${baseUrl}/images/series-card.png`; // Using the series card image
 
 		// Fix asset paths for nested routes
 		// For a path like /series/foo, assets need to be loaded from ../../
