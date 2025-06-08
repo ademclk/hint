@@ -1,101 +1,143 @@
+import { ModeToggle } from "@/components/mode-toggle";
 import { Link } from "react-router-dom";
+import seriesData from '../seriesData.json';
+
+// Get the first series post for featuring
+const seriesPost = seriesData[0];
+const formattedDate = new Date(seriesPost.date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+});
 
 export function Home() {
     return (
-        <div className="min-h-[calc(100vh-4rem)] flex flex-col">
-            {/* Hero section with large gradient overlay */}
-            <div className="relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent dark:from-primary/5"></div>
-                <div className="container mx-auto px-6 py-12 md:py-12 flex flex-col items-center justify-center text-center relative z-10">
-                    <h1 className="text-3xl sm:text-4xl md:text-7xl font-medium tracking-tight mb-4 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/80">
-                        <span className="">HINT Protocol</span>
+        <div className="min-h-[calc(100vh-3rem)] flex flex-col relative overflow-hidden">
+            {/* Animated background circles */}
+            <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary/10 mix-blend-multiply dark:mix-blend-soft-light blur-3xl animate-pulse"></div>
+            <div className="absolute top-1/2 right-1/3 w-80 h-80 rounded-full bg-primary/5 mix-blend-multiply dark:mix-blend-soft-light blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
+            <div className="absolute bottom-1/4 right-1/4 w-72 h-72 rounded-full bg-primary/10 mix-blend-multiply dark:mix-blend-soft-light blur-3xl animate-pulse" style={{ animationDelay: "2s" }}></div>
+
+            {/* Hero section with backdrop blur */}
+            <div className="flex-1 flex flex-col items-center justify-center px-6 py-16 md:py-24 relative z-10">
+                <div className="mb-8 relative">
+                    <div className="absolute -inset-8 rounded-full blur-3xl bg-primary/20 animate-pulse"></div>
+                    <h1 className="text-6xl sm:text-7xl md:text-8xl font-medium tracking-tight mb-2 text-center relative">
+                        HINT
                     </h1>
-                    
-                    <div className="inline-flex items-center justify-center mb-4 bg-secondary/50 text-foreground/80 px-4 py-1.5 rounded-full text-sm font-medium">
-                        <span className="relative">Human In The Loop</span>
-                    </div>
-                    <p className="text-sm sm:text-base md:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
-                        A collaborative approach to quantum education where humans help refine explanations through shared understanding.
+                    <p className="text-base text-center text-muted-foreground relative">
+                        Human In The Loop
                     </p>
-                    <p className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
-                        Discover quantum computing through intuitive explanations and interactive experiences where your participation matters.
-                    </p>
-                    <div className="flex flex-col sm:flex-row justify-center gap-5 mb-8">
-                        <Link 
-                            to="/experiments"
-                            className="inline-flex items-center justify-center px-8 py-3 bg-primary text-primary-foreground font-medium text-base rounded-full shadow-sm hover:bg-primary/90 transition-all duration-200 ease-in-out hover:scale-[1.02] active:scale-[0.98]"
-                        >
-                            Try Experiments
-                        </Link>
-                        <Link 
-                            to="/blog"
-                            className="inline-flex items-center justify-center px-8 py-3 bg-secondary text-secondary-foreground font-medium text-base rounded-full border border-border hover:bg-secondary/80 transition-all duration-200 ease-in-out hover:scale-[1.02] active:scale-[0.98]"
-                        >
-                            Read Articles
-                        </Link>
-                    </div>
-                    
-
                 </div>
-            </div>
 
-            {/* Featured blog post section */}
-            <div className="container mx-auto px-6 py-16 border-b border-border">
-                <div className="max-w-4xl mx-auto">
-                    <span className="block text-sm font-medium text-primary mb-3">FEATURED ARTICLE</span>
-                    <h2 className="text-lg sm:text-xl md:text-3xl font-medium mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
-                        Introducing HINT: Human In The Loop Protocol
-                    </h2>
-                    <p className="text-muted-foreground mb-6 leading-relaxed">
-                        Discover a new approach to quantum education that puts humans at the center of the learning process. Learn how HINT Protocol makes complex quantum concepts more accessible and intuitive through collaborative insights.
+                <p className="text-2xl sm:text-3xl md:text-4xl text-foreground/90 max-w-3xl mx-auto mb-10 text-center font-bold leading-relaxed">
+                    quantum computing<br />explained clearly
+                </p>
+
+                <div className="relative w-full max-w-xl mx-auto mb-12">
+                    <p className="text-muted-foreground mb-6 text-base md:text-lg text-center">
+                        I believe quantum concepts are straightforward natural laws. My goal is to present quantum theory in clear, intuitive terms that anyone can grasp.
                     </p>
-                    <Link 
-                        to="/blog/introducing-hint"
-                        className="inline-flex items-center text-primary hover:underline group"
-                    >
-                        Read the full article
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 ml-1 transition-all duration-300 group-hover:translate-x-1">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                        </svg>
+                    <div className="flex justify-center">
+                        <Link
+                            to={`/series/${seriesPost.id}`}
+                            className="inline-flex items-center justify-center px-8 py-3 bg-primary/90 text-primary-foreground font-medium text-sm rounded-full hover:bg-primary transition-all duration-200 backdrop-blur-sm hover:backdrop-blur-md"
+                        >
+                            read current series
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Featured Series Post - Two-sided Card */}
+                <div className="w-full max-w-4xl mx-auto my-16">
+                    <Link to={`/series/${seriesPost.id}`} className="block group">
+                        <div className="flex flex-col md:flex-row items-center bg-gradient-to-br from-primary/5 to-transparent backdrop-blur-sm border border-primary/10 dark:border-primary/20 rounded-2xl overflow-hidden hover:shadow-md transition-all duration-300 dark:bg-[#131313]/80 dark:from-primary/10 dark:to-[#131313]">
+                            {/* Left side - Content */}
+                            <div className="w-full md:w-1/2 p-8">
+                                <div className="flex items-center space-x-3 mb-4">
+                                    <div className="bg-primary/10 dark:bg-primary/20 px-3 py-1 rounded-full">
+                                        <span className="text-xs text-primary/80 dark:text-primary/90">Episode {seriesPost.part}</span>
+                                    </div>
+                                    <time className="text-xs text-muted-foreground dark:text-muted-foreground/90">
+                                        {formattedDate}
+                                    </time>
+                                </div>
+
+                                <h2 className="text-2xl font-medium mb-4 group-hover:text-primary transition-colors">
+                                    {seriesPost.title}
+                                </h2>
+
+                                <p className="text-muted-foreground dark:text-muted-foreground/90 text-sm mb-5">
+                                    {seriesPost.excerpt}
+                                </p>
+
+                                <div className="flex items-center text-sm text-primary dark:text-primary/90 group-hover:translate-x-0.5 transition-transform">
+                                    <span>Read this episode</span>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-3.5 w-3.5 ml-1 transition-transform group-hover:translate-x-0.5"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Right side - Animation */}
+                            <div className="w-full md:w-1/2 h-full min-h-[200px] md:min-h-[300px] relative overflow-hidden dark:bg-[#0f0f0f]">
+                                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/10 to-transparent dark:from-primary/15 dark:via-primary/10 dark:to-transparent"></div>
+
+                                {/* Animated quantum sphere */}
+                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                    <div className="relative w-32 h-32 md:w-48 md:h-48">
+                                        {/* Orbit rings */}
+                                        <div className="absolute inset-0 rounded-full border border-primary/20 dark:border-primary/30 animate-spin" style={{ animationDuration: "15s" }}></div>
+                                        <div className="absolute inset-2 rounded-full border border-primary/15 dark:border-primary/25 animate-spin" style={{ animationDuration: "10s", animationDirection: "reverse" }}></div>
+                                        <div className="absolute inset-4 rounded-full border border-primary/10 dark:border-primary/20 animate-spin" style={{ animationDuration: "20s" }}></div>
+
+                                        {/* Center sphere */}
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <div className="w-10 h-10 md:w-16 md:h-16 rounded-full bg-primary/30 dark:bg-primary/40 blur-sm animate-pulse"></div>
+                                        </div>
+
+                                        {/* Orbiting particles */}
+                                        <div className="absolute top-1/2 left-0 w-3 h-3 md:w-4 md:h-4 rounded-full bg-primary/50 dark:bg-primary/60 animate-ping" style={{ animationDuration: "3s" }}></div>
+                                        <div className="absolute top-0 left-1/2 w-2 h-2 md:w-3 md:h-3 rounded-full bg-primary/40 dark:bg-primary/50 animate-ping" style={{ animationDuration: "2s", animationDelay: "1s" }}></div>
+                                        <div className="absolute bottom-0 right-1/3 w-2 h-2 md:w-3 md:h-3 rounded-full bg-primary/60 dark:bg-primary/70 animate-ping" style={{ animationDuration: "4s", animationDelay: "0.5s" }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </Link>
                 </div>
-            </div>
 
-            {/* Feature section with cards */}
-            <div className="container mx-auto px-6 py-24">
-                <h2 className="text-lg sm:text-xl md:text-3xl font-medium text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">Explore the quantum world</h2>
-                <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">Discover the fascinating principles of quantum physics through interactive experiments and clear explanations.</p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div className="bg-card p-8 rounded-2xl shadow-sm border border-border">
-                        <div className="w-12 h-12 flex items-center justify-center rounded-full bg-primary/10 mb-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-primary">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
-                            </svg>
-                        </div>
-                        <h3 className="text-base sm:text-lg md:text-xl font-medium mb-3">Learn</h3>
-                        <p className="text-muted-foreground">Understand quantum principles through clear, accessible explanations designed for beginners.</p>
+                {/* Spacer */}
+                <div className="border-t border-border/10 w-full max-w-md mx-auto my-16"></div>
+
+                {/* $HINT Token Section */}
+                <div className="w-full max-w-5xl mx-auto mb-16 px-4 relative">
+                    <div className="text-center mb-16 relative">
+                        <h2 className="text-5xl md:text-6xl font-medium tracking-tight mb-6">
+                            $HINT
+                        </h2>
+                        <p className="text-xl md:text-2xl text-foreground/80 dark:text-foreground/90 max-w-3xl mx-auto font-light">
+                            Everything will be decided together with the community
+                        </p>
                     </div>
-                    
-                    <div className="bg-card p-8 rounded-2xl shadow-sm border border-border">
-                        <div className="w-12 h-12 flex items-center justify-center rounded-full bg-primary/10 mb-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-primary">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 1-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21a48.295 48.295 0 0 1-8.135-1.587c-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
-                            </svg>
-                        </div>
-                        <h3 className="text-base sm:text-lg md:text-xl font-medium mb-3">Experiment</h3>
-                        <p className="text-muted-foreground">Interact with simulations that demonstrate quantum phenomena in an intuitive, visual way.</p>
-                    </div>
-                    
-                    <div className="bg-card p-8 rounded-2xl shadow-sm border border-border">
-                        <div className="w-12 h-12 flex items-center justify-center rounded-full bg-primary/10 mb-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-primary">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
-                            </svg>
-                        </div>
-                        <h3 className="text-base sm:text-lg md:text-xl font-medium mb-3">Connect</h3>
-                        <p className="text-muted-foreground">Join a community exploring the future of quantum computing and its real-world applications.</p>
-                    </div>
+                </div>
+
+                {/* Footer link */}
+                <div className="mt-16 text-center text-xs text-muted-foreground">
+                    <span className="block mb-2 opacity-70">find me on</span>
+                    <a
+                        href="https://farcaster.xyz/ademclk"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-primary transition-colors"
+                    >
+                        @ademclk
+                    </a>
                 </div>
             </div>
         </div>

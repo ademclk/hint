@@ -1,0 +1,58 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with gradient -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3F51B5" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#3F51B5" stop-opacity="0.05"/>
+    </linearGradient>
+    
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#3F51B5" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#3F51B5" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Filter for glow effect -->
+    <filter id="blur-filter" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bg-gradient)" />
+
+  <!-- Main glowing orb -->
+  <circle cx="400" cy="300" r="100" fill="url(#glow)" filter="url(#blur-filter)" />
+
+  <!-- Orbital paths -->
+  <ellipse cx="400" cy="300" rx="200" ry="120" fill="none" stroke="#3F51B5" stroke-width="2" stroke-opacity="0.3" />
+  <ellipse cx="400" cy="300" rx="250" ry="150" fill="none" stroke="#3F51B5" stroke-width="1.5" stroke-opacity="0.2" transform="rotate(30 400 300)" />
+  <ellipse cx="400" cy="300" rx="280" ry="180" fill="none" stroke="#3F51B5" stroke-width="1" stroke-opacity="0.1" transform="rotate(60 400 300)" />
+
+  <!-- Quantum bits on orbit -->
+  <circle cx="600" cy="300" r="15" fill="#3F51B5" fill-opacity="0.6" />
+  <circle cx="400" cy="420" r="12" fill="#3F51B5" fill-opacity="0.5" />
+  <circle cx="200" cy="300" r="15" fill="#3F51B5" fill-opacity="0.6" />
+  <circle cx="400" cy="180" r="12" fill="#3F51B5" fill-opacity="0.5" />
+  
+  <!-- Orbital particles -->
+  <circle cx="550" cy="390" r="8" fill="#3F51B5" fill-opacity="0.7" />
+  <circle cx="250" cy="390" r="8" fill="#3F51B5" fill-opacity="0.7" />
+  <circle cx="550" cy="210" r="8" fill="#3F51B5" fill-opacity="0.7" />
+  <circle cx="250" cy="210" r="8" fill="#3F51B5" fill-opacity="0.7" />
+
+  <!-- Small dots scattered around -->
+  <circle cx="150" cy="150" r="3" fill="#3F51B5" fill-opacity="0.5" />
+  <circle cx="650" cy="450" r="3" fill="#3F51B5" fill-opacity="0.5" />
+  <circle cx="200" cy="500" r="2" fill="#3F51B5" fill-opacity="0.4" />
+  <circle cx="600" cy="100" r="2" fill="#3F51B5" fill-opacity="0.4" />
+  <circle cx="700" cy="300" r="4" fill="#3F51B5" fill-opacity="0.5" />
+  <circle cx="100" cy="300" r="4" fill="#3F51B5" fill-opacity="0.5" />
+  <circle cx="400" cy="500" r="3" fill="#3F51B5" fill-opacity="0.5" />
+  <circle cx="400" cy="100" r="3" fill="#3F51B5" fill-opacity="0.5" />
+
+  <!-- Connecting lines to represent entanglement -->
+  <line x1="600" y1="300" x2="200" y2="300" stroke="#3F51B5" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="5,5" />
+  <line x1="400" y1="180" x2="400" y2="420" stroke="#3F51B5" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="5,5" />
+  <line x1="550" y1="210" x2="250" y2="390" stroke="#3F51B5" stroke-width="1" stroke-opacity="0.2" stroke-dasharray="5,5" />
+  <line x1="550" y1="390" x2="250" y2="210" stroke="#3F51B5" stroke-width="1" stroke-opacity="0.2" stroke-dasharray="5,5" />
+</svg> 

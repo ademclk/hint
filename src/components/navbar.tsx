@@ -4,9 +4,8 @@ import { HintLogo } from "./HintLogo";
 import gsap from "gsap";
 
 const NAV_LINKS = [
-    { name: "About", href: "/about" },
-    { name: "Solutions", href: "/solutions" },
-    { name: "Resources", href: "/resources" },
+    { name: "Home", href: "/" },
+    { name: "Series", href: "/series" },
     { name: "Blog", href: "/blog" },
 ];
 
@@ -26,12 +25,42 @@ function useBodyScrollLock(isLocked: boolean): void {
 export default function Navbar() {
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
     const menuButtonRef = useRef<HTMLButtonElement>(null);
     const menuOverlayRef = useRef<HTMLDivElement>(null);
     const topLineRef = useRef<SVGPolylineElement>(null);
     const middleLineRef = useRef<SVGPolylineElement>(null);
     const bottomLineRef = useRef<SVGPolylineElement>(null);
+    const navbarRef = useRef<HTMLElement>(null);
     useBodyScrollLock(isMenuOpen);
+
+    useEffect(() => {
+        // Handle navbar visibility based on scroll
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.body.scrollHeight;
+
+            // Show navbar if scrolling up or near the bottom of the page
+            const isScrollingUp = currentScrollY < lastScrollY;
+            const isNearBottom = currentScrollY + windowHeight > documentHeight - 100;
+
+            if (isScrollingUp || isNearBottom || currentScrollY < 50) {
+                setIsVisible(true);
+            } else if (currentScrollY > 100 && !isMenuOpen) {
+                setIsVisible(false);
+            }
+
+            setLastScrollY(currentScrollY);
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [lastScrollY, isMenuOpen]);
 
     useEffect(() => {
         if (topLineRef.current && middleLineRef.current && bottomLineRef.current) {
@@ -123,11 +152,14 @@ export default function Navbar() {
 
     return (
         <>
-            <header className="sticky top-0 z-[100] flex h-12 items-center justify-between bg-background/40 backdrop-blur-3xl px-4 lg:px-6">
+            <header
+                ref={navbarRef}
+                className={`fixed top-0 w-full z-[100] flex h-12 items-center justify-between bg-background/60 backdrop-blur-xl px-4 lg:px-6 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'
+                    }`}
+            >
                 <div className="mx-auto flex w-full max-w-5xl items-center justify-between">
                     <Link to="/" className="flex items-center gap-2 text-lg font-semibold md:text-base lg:order-1" onClick={closeMenu}>
-                        <HintLogo size={40} className="text-primary" />
-                        <span className="sr-only">HINT Protocol</span>
+                        <span className="">HINT</span>
                     </Link>
                     <nav className="hidden md:flex flex-1 justify-center space-x-10 lg:order-2">
                         {NAV_LINKS.map(({ name, href }) => (
@@ -180,6 +212,7 @@ export default function Navbar() {
                     </div>
                 </div>
             </header>
+            <div style={{ height: '3rem' }}></div> {/* Spacer to account for fixed navbar */}
             <div
                 ref={menuOverlayRef}
                 className="fixed inset-0 z-[99] bg-background/80 backdrop-blur-3xl flex flex-col px-8 py-8 h-full overflow-y-auto"

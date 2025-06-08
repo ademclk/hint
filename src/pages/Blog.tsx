@@ -11,6 +11,7 @@ interface BlogPostEntry {
   authorRole?: string;
   readTime?: string;
   excerpt: string;
+  coverImage?: string;
 }
 
 const posts: BlogPostEntry[] = blogPostsData.map(post => ({
@@ -32,137 +33,130 @@ export default function Blog() {
         <div className="container mx-auto px-6 relative z-10">
           <header className="max-w-2xl mx-auto text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-medium tracking-tight mb-4">
-              Articles
+              Blog
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto">
-              Exploring quantum concepts through clear, intuitive explanations.
+              News and insights about quantum computing and related technologies.
             </p>
           </header>
         </div>
       </div>
 
-      {/* Featured Article Section */}
+      {/* Blog posts grid */}
       <div className="container mx-auto px-6 -mt-8 relative z-20">
-        <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 max-w-4xl mx-auto">
-          {posts.length > 0 && (
-            <article className="animate-[fade-in_0.6s_ease-out_forwards]">
-              <Link 
-                to={`/blog/${posts[0].slug}`}
-                className="block p-8 md:p-10"
+        {posts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {posts.map((post, index) => (
+              <Link
+                key={post.slug}
+                to={`/blog/${post.slug}`}
+                className="group animate-[fade-in_0.6s_ease-out_forwards]"
+                style={{
+                  animationDelay: `${index * 0.1}s`,
+                  opacity: 0
+                }}
               >
-                <div className="flex flex-col items-start">
-                  <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary mb-6">
-                    {posts[0].category}
-                    <span className="ml-2 px-2 py-0.5 rounded-full bg-primary/20 text-primary/90">New</span>
+                <article className="h-full bg-card border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
+                  {post.coverImage ? (
+                    <div className="h-48 overflow-hidden">
+                      <img
+                        src={post.coverImage}
+                        alt={post.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-32 bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
+                      <span className="text-primary/70 text-lg font-medium">{post.category}</span>
+                    </div>
+                  )}
+
+                  <div className="p-5 flex-grow flex flex-col">
+                    <div className="flex justify-between items-start mb-3">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                        {post.category}
+                      </span>
+                      {post.readTime && (
+                        <span className="text-xs text-muted-foreground">
+                          {post.readTime}
+                        </span>
+                      )}
+                    </div>
+
+                    <h2 className="text-xl font-medium mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                      {post.title}
+                    </h2>
+
+                    <p className="text-muted-foreground text-sm mb-4 line-clamp-3 flex-grow">
+                      {post.excerpt}
+                    </p>
+
+                    <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/50">
+                      <div className="flex items-center">
+                        <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs text-primary mr-2">
+                          {post.author.charAt(0).toUpperCase()}
+                        </div>
+                        <span className="text-xs font-medium">
+                          @{post.author}
+                        </span>
+                      </div>
+                      <time className="text-xs text-muted-foreground">
+                        {post.date}
+                      </time>
+                    </div>
                   </div>
-                  
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium mb-4">
-                    {posts[0].title}
-                  </h2>
-                  
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
-                    <time dateTime={posts[0].date}>{posts[0].date}</time>
-                    <span className="inline-block w-1 h-1 rounded-full bg-muted-foreground/50"></span>
-                    <span className="text-primary hover:underline">
-                      @ademclk
-                    </span>
-                  </div>
-                  
-                  <p className="text-muted-foreground leading-relaxed mb-6 text-base sm:text-lg max-w-3xl">
-                    Discover the HINT Protocol, a framework for quantum education that leverages collective human intelligence to make complex quantum concepts more intuitive and accessible. Unlike traditional educational approaches, HINT incorporates diverse perspectives from learners themselves.
-                  </p>
-                  <p className="text-muted-foreground leading-relaxed mb-8 text-base sm:text-lg max-w-3xl">
-                    Today, we're launching our Farcaster mini app as the first implementation of HINT Protocol, featuring interactive quantum experiments, community contributions, and personalized learning paths.
-                  </p>
-                  
-                  <div className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground font-medium text-base rounded-full hover:bg-primary/90 transition-all duration-200 group">
-                    <span>Read full article</span>
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      className="h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" 
-                      viewBox="0 0 20 20" 
-                      fill="currentColor"
-                    >
-                      <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
+                </article>
               </Link>
-            </article>
-          )}
-          
-          {posts.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-muted-foreground">
-                No articles published yet. Check back soon for updates.
-              </p>
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-card border border-border rounded-xl p-10 text-center max-w-md mx-auto">
+            <p className="text-muted-foreground">
+              No articles published yet. Check back soon for updates.
+            </p>
+          </div>
+        )}
       </div>
-      
-      {/* Connect & Contribute Section */}
+
+      {/* Subscribe section */}
       <div className="container mx-auto px-6 mt-16">
-        <div className="bg-card border border-border rounded-2xl p-8 max-w-3xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="text-center md:text-left">
-              <h3 className="text-lg sm:text-xl font-medium mb-3">Stay Updated</h3>
-              <p className="text-sm sm:text-base text-muted-foreground mb-6">
-                Follow <span className="text-primary">@ademclk</span> on Farcaster for the latest updates on HINT Protocol and quantum computing.
-              </p>
-              <a 
-                href="https://farcaster.xyz/ademclk" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-6 py-2.5 bg-primary text-primary-foreground font-medium text-sm rounded-full transition-all duration-200 hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]"
-                onClick={async (e) => {
-                  try {
-                    const isMiniApp = await sdk.isInMiniApp();
-                    if (isMiniApp) {
-                      e.preventDefault();
-                      // Create a cast about following instead since followUser isn't available
-                      await sdk.actions.composeCast({
-                        text: "I'm following @ademclk to stay updated on HINT Protocol - a new approach to quantum education!",
-                        embeds: ["https://farcaster.xyz/ademclk"]
-                      });
-                    }
-                  } catch (error) {
-                    console.error('Error interacting with Farcaster:', error);
+        <div className="bg-card border border-border rounded-2xl p-8 max-w-2xl mx-auto">
+          <div className="text-center">
+            <h3 className="text-xl font-medium mb-3">Subscribe to Updates</h3>
+            <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+              Follow me on Farcaster to get notified when new articles are published.
+            </p>
+
+            <a
+              href="https://farcaster.xyz/ademclk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground font-medium text-sm rounded-full hover:bg-primary/90 transition-all duration-200 group"
+              onClick={async (e) => {
+                try {
+                  const isMiniApp = await sdk.isInMiniApp();
+                  if (isMiniApp) {
+                    e.preventDefault();
+                    await sdk.actions.composeCast({
+                      text: "I'm following @ademclk to stay updated on quantum computing insights and news!",
+                      embeds: ["https://farcaster.xyz/ademclk"]
+                    });
                   }
-                }}
+                } catch (error) {
+                  console.error('Error interacting with Farcaster:', error);
+                }
+              }}
+            >
+              <span>Follow on Farcaster</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-1"
+                viewBox="0 0 20 20"
+                fill="currentColor"
               >
-                Follow on Farcaster
-              </a>
-            </div>
-            
-            <div className="text-center md:text-left">
-              <h3 className="text-lg sm:text-xl font-medium mb-3">Connect Your Wallet</h3>
-              <p className="text-sm sm:text-base text-muted-foreground mb-6">
-                Explore quantum experiments and contribute your insights by connecting your wallet. HINT Protocol supports both standard wallet connections and Farcaster authentication.
-              </p>
-              <button 
-                className="inline-flex items-center justify-center px-6 py-2.5 bg-secondary text-secondary-foreground font-medium text-sm rounded-full transition-all duration-200 hover:bg-secondary/90 hover:scale-[1.02] active:scale-[0.98] border border-border"
-                onClick={async () => {
-                  try {
-                    // This button would typically use the ConnectMenu component that integrates with Wagmi
-                    // It supports both injected wallets (MetaMask) and Farcaster Frame connector
-                    // For now, just alert the user about wallet connection
-                    alert('Wallet connection would be implemented using Wagmi with injected and farcasterFrame connectors');
-                    
-                    // If in Farcaster mini app, we could also try to use the Farcaster authentication
-                    const isMiniApp = await sdk.isInMiniApp();
-                    if (isMiniApp) {
-                      // In a real implementation, this would integrate with the ConnectMenu component
-                      console.log('Using Farcaster authentication in mini app environment');
-                    }
-                  } catch (error) {
-                    console.error('Error connecting wallet:', error);
-                  }
-                }}
-              >
-                Connect Wallet
-              </button>
-            </div>
+                <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </a>
           </div>
         </div>
       </div>
