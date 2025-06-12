@@ -1,7 +1,7 @@
 ---
 slug: introducing-hint
 title: Introducing HINT - Human In The Loop Protocol
-date: May 27, 2025
+date: June 10, 2025
 category: Announcement
 author: ademclk
 authorRole: Founder
