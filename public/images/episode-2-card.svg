@@ -1,0 +1,104 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a2a2e;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a3a3e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a2a2e;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="titleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00dcd7;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="dividerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00dcd7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00dcd7;stop-opacity:0.3" />
+    </linearGradient>
+    
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Background Mathematical Elements -->
+  <g opacity="0.15" fill="#00dcd7" font-family="Times New Roman, serif">
+    <text x="150" y="180" font-size="18" transform="rotate(-5 150 180)">3 + 4i</text>
+    <text x="200" y="400" font-size="18" transform="rotate(12 200 400)">e^(iπ) = -1</text>
+    <text x="100" y="350" font-size="18" transform="rotate(-8 100 350)">i² = -1</text>
+    <text x="150" y="500" font-size="16" transform="rotate(15 150 500)">z = a + bi</text>
+    <text x="250" y="280" font-size="16" transform="rotate(-12 250 280)">|z| = √(a² + b²)</text>
+  </g>
+
+  <!-- Complex Plane Visualization -->
+  <g transform="translate(800, 120)">
+    <!-- Plane boundary -->
+    <rect x="0" y="0" width="280" height="280" fill="none" stroke="#00dcd7" stroke-width="1" opacity="0.3"/>
+    
+    <!-- Axes -->
+    <line x1="0" y1="140" x2="280" y2="140" stroke="#00dcd7" stroke-width="2" opacity="0.4"/>
+    <line x1="140" y1="0" x2="140" y2="280" stroke="#00dcd7" stroke-width="2" opacity="0.4"/>
+    
+    <!-- Vector line -->
+    <line x1="140" y1="140" x2="210" y2="80" stroke="#00dcd7" stroke-width="3" opacity="0.7"/>
+    
+    <!-- Complex number point -->
+    <circle cx="210" cy="80" r="5" fill="#00dcd7" filter="url(#glow)">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Axis labels -->
+    <text x="270" y="155" font-family="Times New Roman, serif" font-size="14" fill="#00dcd7" opacity="0.6">Re</text>
+    <text x="145" y="15" font-family="Times New Roman, serif" font-size="14" fill="#00dcd7" opacity="0.6">Im</text>
+  </g>
+
+  <!-- Large imaginary i -->
+  <text x="950" y="400" font-family="Times New Roman, serif" font-size="180" fill="#00dcd7" opacity="0.3" font-style="italic" font-weight="bold">i</text>
+
+  <!-- Euler's Formula -->
+  <text x="750" y="80" font-family="Times New Roman, serif" font-size="28" fill="#00dcd7" opacity="0.7" font-style="italic" transform="rotate(-15 750 80)">e^(iθ) = cos θ + i sin θ</text>
+
+  <!-- Main Content Area -->
+  <g transform="translate(80, 200)">
+    <!-- Episode Badge -->
+    <rect x="0" y="0" width="140" height="40" rx="20" fill="#00dcd7" fill-opacity="0.2" stroke="#00dcd7" stroke-opacity="0.3"/>
+    <text x="70" y="26" font-family="Arial, sans-serif" font-size="18" font-weight="500" fill="#00dcd7" text-anchor="middle">Episode 2</text>
+    
+    <!-- Title -->
+    <text x="0" y="120" font-family="Arial, sans-serif" font-size="72" font-weight="700" fill="#ffffff" style="line-height: 1.1">
+      <tspan x="0" dy="0">Imaginary and</tspan>
+      <tspan x="0" dy="80">Complex Numbers</tspan>
+    </text>
+    
+    <!-- Divider -->
+    <rect x="0" y="240" width="120" height="4" fill="url(#dividerGradient)"/>
+  </g>
+
+  <!-- Decorative Circles -->
+  <g transform="translate(500, 450)" opacity="0.4">
+    <circle cx="0" cy="0" r="80" fill="none" stroke="#00dcd7" stroke-width="2" opacity="0.3">
+      <animateTransform attributeName="transform" type="rotate" values="0;360" dur="20s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="0" cy="0" r="60" fill="none" stroke="#00dcd7" stroke-width="1" opacity="0.2">
+      <animateTransform attributeName="transform" type="rotate" values="360;0" dur="15s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="0" cy="0" r="40" fill="none" stroke="#00dcd7" stroke-width="1" opacity="0.1">
+      <animateTransform attributeName="transform" type="rotate" values="0;360" dur="25s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Additional Mathematical Elements -->
+  <g opacity="0.2" fill="#00dcd7" font-family="Times New Roman, serif">
+    <text x="600" y="500" font-size="16">z₁ × z₂ = |z₁| × |z₂| × e^(i(θ₁ + θ₂))</text>
+    <text x="350" y="120" font-size="14" transform="rotate(8 350 120)">cos(π) + i sin(π) = -1</text>
+    <text x="50" y="80" font-size="14" transform="rotate(-10 50 80)">√(-1) = i</text>
+  </g>
+
+</svg> 
