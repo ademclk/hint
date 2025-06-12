@@ -1,7 +1,7 @@
 ---
 title: 'Imaginary and Complex Numbers'
 date: '2023-06-15T12:00:00.000Z'
-excerpt: 'Exploring the mathematical concepts behind quantum computing and how they are implemented in Q#.'
+excerpt: 'Exploring the mathematical concepts behind quantum computing.'
 author: 'Adem'
 part: 2
 language: 'en'
@@ -9,7 +9,7 @@ language: 'en'
 
 # Imaginary and Complex Numbers
 
-In the previous episode, we talked about computers. In this episode, we'll discuss mathematical terms and how they are coded in the Q# language.
+In the previous episode, we talked about computers. In this episode, we'll explore the mathematical foundations that make quantum computing possible.
 
 ## What Are Imaginary Numbers?
 
@@ -35,27 +35,6 @@ The number i and multiples of i are called imaginary numbers.
 
 ## Powers of Imaginary Numbers
 
-### Problem Definition
-
-**Input:** An even integer, n (can be negative).
-
-**Output:** Return the value of $i^n$.
-
-```qsharp
-namespace Imaginary {
-    function PowersOfI(n : Int) : Int {
-        // If n is divisible by 4
-        if n % 4 == 0 {
-            return 1;
-        } else {
-            return -1;
-        }
-    }
-}
-```
-
-### Explanation
-
 The powers of the imaginary number i are cyclic.
 
 - $i^0 = 1$
@@ -64,12 +43,7 @@ The powers of the imaginary number i are cyclic.
 - $i^3 = -i$
 - $i^4 = 1$
 
-Given that the input is always an even number, it's sufficient to consider just these two cases:
-
-- When $n \equiv 0 \pmod{4}$: $i^n = 1$
-- When $n \equiv 2 \pmod{4}$: $i^n = -1$
-
-The modulo (mod) operator gives the remainder when one number is divided by another. In Q#, this is represented by the % symbol. We solved this by checking if the parameter n is divisible by 4 to determine which value to return.
+This cyclical pattern continues infinitely, which becomes crucial in quantum mechanics where we deal with rotational symmetries and phases.
 
 ## What Are Complex Numbers?
 
@@ -85,47 +59,19 @@ Even the real numbers we know can be represented as a special case of complex nu
 
 $$2 = 2 + 0i, \quad -3i = 0 - 3i$$
 
-Complex numbers are not directly supported in Q#, but there is a special struct type called Complex defined in **Std.Math**.
-
-```qsharp
-namespace Complex {
-	// x = a + bi
-	let (a, b) = (x.Real, x.Imag);
-}
-```
-
 ---
 
 ## Operations with Complex Numbers
 
-There are special functions in Q# for operating with complex numbers, but for better learning, we won't use those functions at this stage.
-
 ### Addition
-
-**Input:**
-
-1. Complex number $x=a+bi$.
-2. Complex number $y=c+di$.
-
-**Output:** Return the sum x + y as a complex number.
 
 To add complex numbers, add the real and imaginary parts separately:
 
 $$(1 + 2i) + (3 + 4i) = 4 + 6i$$
 
-```qsharp
-namespace Complex {
-    function ComplexAdd(x : Complex, y : Complex) : Complex {
-        return Complex(x.Real + y.Real, x.Imag + y.Imag);
-    }
-}
-```
-
 ### Multiplication
 
 To multiply, use the distributive property and $i^2 = -1$.
-
-To multiply these two numbers, use the classic distributive method.
 
 $$x \cdot y = (a + bi)(c + di)$$
 
@@ -142,24 +88,6 @@ Finally, let's group the terms
 
 $$(a + bi)(c + di) = (ac - bd) + (ad + bc)i$$
 
-**Input:**
-
-1. Complex number $x=a+bi$.
-2. Complex number $y=c+di$.
-
-**Output:** Return the product x \* y as a complex number.
-
-```qsharp
-namespace Complex {
-    function ComplexMult(x : Complex, y : Complex) : Complex {
-        return Complex(
-            x.Real * y.Real - x.Imag * y.Imag,
-            x.Real * y.Imag + x.Imag * y.Real
-        );
-    }
-}
-```
-
 ---
 
 ## Conjugate and Division
@@ -169,18 +97,6 @@ namespace Complex {
 The conjugate of a complex number is obtained by changing the sign of the imaginary part.
 
 $$3 + 4i \rightarrow 3 - 4i$$
-
-**Input:** Complex number $x=a+bi$.
-
-**Output:** Return the conjugate of the complex number.
-
-```qsharp
-namespace Complex {
-    function ComplexConjugate(x : Complex) : Complex {
-        return Complex(x.Real, -x.Imag);
-    }
-}
-```
 
 ### Division
 
@@ -192,7 +108,7 @@ Let's expand the denominator.
 
 $$(c + di)(c - di) = c^2 - cdi + cdi - d^2i^2 = c^2 + d^2$$
 
-Let's also expand the numerator. Like in the multiplication operation, we did the distribution using $i^2 = -1$.
+Let's also expand the numerator. Like in the multiplication operation, we use $i^2 = -1$.
 
 $$(a + bi)(c - di) = (ac + bd) + (bc - ad)i$$
 
@@ -207,19 +123,6 @@ $$\frac{a + bi}{r} = \frac{a}{r} + \frac{b}{r}i$$
 In this case:
 
 $$\frac{(ac + bd) + (bc - ad)i}{c^2 + d^2} = \frac{ac + bd}{c^2 + d^2} + \frac{bc - ad}{c^2 + d^2}i$$
-
-```qsharp
-namespace Complex {
-    function ComplexDiv(x : Complex, y : Complex) : Complex {
-        let (a, b) = (x.Real, x.Imag);
-        let (c, d) = (y.Real, y.Imag);
-        let denominator = c * c + d * d;
-        let real = (a * c + b * d) / denominator;
-        let imag = (b * c - a * d) / denominator;
-        return Complex(real, imag);
-    }
-}
-```
 
 ---
 
@@ -247,15 +150,6 @@ This is not valid for addition, but the triangle inequality rule applies.
 
 $$|z_1 + z_2| \leq |z_1| + |z_2|$$
 
-```qsharp
-namespace Complex {
-    function ComplexModulus(x : Complex) : Double {
-        let (a, b) = (x.Real, x.Imag);
-        return Sqrt(a * a + b * b);
-    }
-}
-```
-
 ## Complex Exponentiation and Euler's Formula
 
 ### Imaginary Power of a Real Number
@@ -282,19 +176,6 @@ Using Euler's formula:
 
 $$e^{a + bi} = e^a \cdot (\cos b + i \sin b)$$
 
-```qsharp
-namespace Complex {
-    open Std.Math;
-
-    function ComplexExponent(x : Complex) : Complex {
-        return Complex(
-            E()^x.Real * Cos(x.Imag),
-            E()^x.Real * Sin(x.Imag)
-        );
-    }
-}
-```
-
 ## Complex Power: $r^{a + bi}$
 
 To raise a real number to a complex power, logarithms and Euler's formula can be used
@@ -308,20 +189,6 @@ $$r^a \cdot \cos(b \ln r)$$
 
 Imaginary part:
 $$r^a \cdot \sin(b \ln r)i$$
-
-```qsharp
-namespace Complex {
-    function ComplexExpReal(r : Double, x : Complex) : Complex {
-        if AbsD(r) < 1e-9 {
-            return Complex(0., 0.);
-        }
-
-        let ra = r^x.Real;
-        let lnr = Log(r);
-        return Complex(ra * Cos(x.Imag * lnr), ra * Sin(x.Imag * lnr));
-    }
-}
-```
 
 ## Polar Representation
 
@@ -367,62 +234,20 @@ This representation makes operations like multiplication, division, and exponent
 - **From Polar to Cartesian**
   $$z = r \cdot (\cos\theta + i\sin\theta)$$
 
-In Q#, complex numbers in polar form are represented by the ComplexPolar type in the Std.Math namespace.
-
-**Getting the modulus and phase of a complex number**
-
-```qsharp
-let r = x.Magnitude;
-let theta = x.Argument;
-```
-
-The Q# ComplexAsComplexPolar function is used to make this conversion. But as with previous operations, we'll do it without using this function for educational purposes.
-
-```qsharp
-namespace Complex {
-    function ComplexToComplexPolar(x : Complex) : ComplexPolar {
-        return ComplexPolar(
-            Sqrt(x.Real * x.Real + x.Imag * x.Imag),
-            ArcTan2(x.Imag, x.Real)
-        );
-    }
-}
-```
-
-### Conversion from Polar to Cartesian
-
-```qsharp
-namespace Complex {
-    function ComplexPolarToComplex(x : ComplexPolar) : Complex {
-        return Complex(
-            x.Magnitude * Cos(x.Argument),
-            x.Magnitude * Sin(x.Argument)
-        );
-    }
-}
-```
-
 ### Multiplication in Polar Form
 
 When multiplying complex numbers in polar form, the moduli are multiplied, and the angles are added:
 
 $$(r_1 e^{i\theta_1})(r_2 e^{i\theta_2}) = r_1 r_2 e^{i(\theta_1 + \theta_2)}$$
 
-```qsharp
-namespace Complex {
-    function ComplexPolarMult(x : ComplexPolar, y : ComplexPolar) : ComplexPolar {
-        mutable theta = x.Argument + y.Argument;
-        if (theta > PI()) {
-            set theta -= 2.0 * PI();
-        }
-        if (theta <= -PI()) {
-            set theta += 2.0 * PI();
-        }
-        return ComplexPolar(x.Magnitude * y.Magnitude, theta);
-    }
-}
-```
+This property becomes extremely useful in quantum mechanics, where quantum states are often represented as complex numbers in polar form.
 
 ## Why Are We Learning These?
 
-Complex numbers are one of the fundamental building blocks of quantum computing. To understand quantum computers and algorithms, you need to be familiar with these kinds of mathematical concepts. Yes, some parts can be confusing, but our aim is not to memorize them but to understand their logic. This section and other mathematical topics may seem boring at times, but understanding the basic principles will make your job much easier in the future.
+Complex numbers are one of the fundamental building blocks of quantum computing. To understand quantum computers and algorithms, you need to be familiar with these kinds of mathematical concepts.
+
+In quantum mechanics, the state of a quantum system is described by a complex number called a **quantum amplitude**. These amplitudes determine the probability of measuring the system in different states, and they follow the mathematical rules we've just explored.
+
+The phase (angle) of these complex numbers represents something physical in quantum systems - it's not just mathematical abstraction. When quantum states interfere with each other, it's the complex arithmetic we've learned that determines whether the interference is constructive or destructive.
+
+Understanding these concepts deeply will make your journey into quantum computing much smoother. While some parts can be confusing, our aim is not to memorize them but to understand their logic and see how they connect to the quantum world.

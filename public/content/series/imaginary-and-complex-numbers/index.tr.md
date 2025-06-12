@@ -1,7 +1,7 @@
 ---
 title: 'Sanal ve Karmaşık Sayılar'
 date: '2023-06-15T12:00:00.000Z'
-excerpt: 'Kuantum hesaplamanın temelindeki matematiksel kavramları ve Q# dilinde nasıl uygulandıklarını inceliyoruz.'
+excerpt: 'Kuantum bilişimin temelindeki matematiksel kavramları inceliyoruz.'
 author: 'Adem'
 part: 2
 language: 'tr'
@@ -9,7 +9,7 @@ language: 'tr'
 
 # Sanal ve Karmaşık Sayılar
 
-Önceki bölümde bilgisayarlardan bahsetmiştik. Bu bölümde matematiksel terimlerden ve bu terimlerin Q# dilinde kodlanmasından bahsedeceğiz.
+Önceki bölümde bilgisayarlardan bahsetmiştik. Bu bölümde kuantum bilişimi mümkün kılan matematiksel temelleri keşfedeceğiz.
 
 ## Sanal Sayılar Nedir?
 
@@ -21,7 +21,7 @@ Bunu çözemiyoruz çünkü bir sayının karesi negatif olamaz. Matematikçiler
 
 $$i^2 = -1$$
 
-i gerçek bir sayı olamayacağından olayı **sanal sayı** olarak adlandırılmış. Tek farkı karesinin -1 olması onun dışında sayılar üzerinde yaptığımız işlemler i üzerinde de yapılabilir.
+i gerçek bir sayı olamayacağından dolayı **sanal sayı** olarak adlandırılmış. Tek farkı karesinin -1 olması onun dışında sayılar üzerinde yaptığımız işlemler i üzerinde de yapılabilir.
 
 $$i + i = 2i$$
 
@@ -35,27 +35,6 @@ i sayısı ve i'nin katları da sanal sayı olarak adlandırılır.
 
 ## Sanal Sayının Kuvvetleri
 
-### Problem Tanımı
-
-**Girdi:** Çift bir tamsayı, n (negatif olabilir).
-
-**Çıktı:** $i^n$ değerini döndür.
-
-```qsharp
-namespace Imaginary {
-    function PowersOfI(n : Int) : Int {
-        // Eğer n, 4'e tam bölünüyorsa
-        if n % 4 == 0 {
-            return 1;
-        } else {
-            return -1;
-        }
-    }
-}
-```
-
-### Açıklama
-
 Sanal sayı i'nin kuvvetleri döngüseldir.
 
 - $i^0 = 1$
@@ -64,12 +43,7 @@ Sanal sayı i'nin kuvvetleri döngüseldir.
 - $i^3 = -i$
 - $i^4 = 1$
 
-Girdi her zaman çift sayı olduğu garanti edildiğinden, sadece şu iki durumu göz önünde bulundurmak yeterlidir:
-
-- $n \equiv 0 \pmod{4}$ olduğunda: $i^n = 1$
-- $n \equiv 2 \pmod{4}$ olduğunda: $i^n = -1$
-
-Modulo (mod) operatörü, bir sayının başka bir sayıya bölümünden kalan değeri verir. Q# dilinde bu % sembolüyle gösterilir. Hangi değerin döndürüleceğini belirlemek için parametre olarak verilen n sayısının 4'e tam bölünüp bölünmediğini kontrol ederek çözüme ulaştık.
+Bu döngüsel desen sonsuza kadar devam eder ve kuantum mekaniğinde döngüsel simetriler ve fazlarla uğraştığımızda kritik hale gelir.
 
 ## Karmaşık Sayılar Nedir?
 
@@ -85,47 +59,19 @@ Hatta bildiğimiz gerçek sayılar bile aslında karmaşık sayıların özel bi
 
 $$2 = 2 + 0i, \quad -3i = 0 - 3i$$
 
-Q# dilinde karmaşık sayılar doğrudan desteklenmez ama **Std.Math** içerisinde tanımlı Complex adında özel bir struct tipi var.
-
-```qsharp
-namespace Complex {
-	// x = a + bi
-	let (a, b) = (x.Real, x.Imag);
-}
-```
-
 ---
 
 ## Karmaşık Sayılarla İşlemler
 
-Q# dilinde karmaşık sayılarla işlem yapmak için özel fonksiyonlar bulunmakta fakat daha iyi öğrenebilmek için bu aşamada o fonksiyonları kullanmayacağız.
-
 ### Toplama
-
-**Girdi:**
-
-1. Karmaşık sayı $x=a+bi$.
-2. Karmaşık sayı $y=c+di$.
-
-**Çıktı:** x + y toplamını karmaşık sayı olarak döndür.
 
 Karmaşık sayıları toplamak için gerçek ve sanal kısımlar ayrı ayrı toplanır:
 
 $$(1 + 2i) + (3 + 4i) = 4 + 6i$$
 
-```qsharp
-namespace Complex {
-    function ComplexAdd(x : Complex, y : Complex) : Complex {
-        return Complex(x.Real + y.Real, x.Imag + y.Imag);
-    }
-}
-```
-
 ### Çarpma
 
 Çarpmak için dağıtma işlemi yapılır ve $i^2 = -1$ kullanılır.
-
-Bu iki sayıyı çarpmak için klasik dağıtma yöntemiyle işlem yapılır.
 
 $$x \cdot y = (a + bi)(c + di)$$
 
@@ -142,24 +88,6 @@ Son olarak terimleri gruplandıralım
 
 $$(a + bi)(c + di) = (ac - bd) + (ad + bc)i$$
 
-**Girdi:**
-
-1. Karmaşık sayı $x=a+bi$.
-2. Karmaşık sayı $y=c+di$.
-
-**Çıktı:** x \* y çarpımını karmaşık sayı olarak döndür.
-
-```qsharp
-namespace Complex {
-    function ComplexMult(x : Complex, y : Complex) : Complex {
-        return Complex(
-            x.Real * y.Real - x.Imag * y.Imag,
-            x.Real * y.Imag + x.Imag * y.Real
-        );
-    }
-}
-```
-
 ---
 
 ## Eşlenik ve Bölme İşlemi
@@ -169,18 +97,6 @@ namespace Complex {
 Bir karmaşık sayının eşleniği, sanal kısmın işaretinin değiştirilmesiyle elde edilir.
 
 $$3 + 4i \rightarrow 3 - 4i$$
-
-**Girdi:** Karmaşık sayı $x=a+bi$.
-
-**Çıktı:** Karmaşık sayının eşleniğini döndür.
-
-```qsharp
-namespace Complex {
-    function ComplexConjugate(x : Complex) : Complex {
-        return Complex(x.Real, -x.Imag);
-    }
-}
-```
 
 ### Bölme
 
@@ -192,7 +108,7 @@ Paydayı açalım.
 
 $$(c + di)(c - di) = c^2 - cdi + cdi - d^2i^2 = c^2 + d^2$$
 
-Pay kısmını da açalım. Daha önce çarpma işleminde yaptığımız gibi $i^2 = -1$ kullanarak dağıtma işlemi yaptık.
+Pay kısmını da açalım. Daha önce çarpma işleminde yaptığımız gibi $i^2 = -1$ kullanarak dağıtma işlemi yapıyoruz.
 
 $$(a + bi)(c - di) = (ac + bd) + (bc - ad)i$$
 
@@ -207,19 +123,6 @@ $$\frac{a + bi}{r} = \frac{a}{r} + \frac{b}{r}i$$
 Bu durumda da:
 
 $$\frac{(ac + bd) + (bc - ad)i}{c^2 + d^2} = \frac{ac + bd}{c^2 + d^2} + \frac{bc - ad}{c^2 + d^2}i$$
-
-```qsharp
-namespace Complex {
-    function ComplexDiv(x : Complex, y : Complex) : Complex {
-        let (a, b) = (x.Real, x.Imag);
-        let (c, d) = (y.Real, y.Imag);
-        let denominator = c * c + d * d;
-        let real = (a * c + b * d) / denominator;
-        let imag = (b * c - a * d) / denominator;
-        return Complex(real, imag);
-    }
-}
-```
 
 ---
 
@@ -247,15 +150,6 @@ Toplama için bu geçerli değil ama üçgen eşitsizliği kuralı geçerlidir.
 
 $$|z_1 + z_2| \leq |z_1| + |z_2|$$
 
-```qsharp
-namespace Complex {
-    function ComplexModulus(x : Complex) : Double {
-        let (a, b) = (x.Real, x.Imag);
-        return Sqrt(a * a + b * b);
-    }
-}
-```
-
 ## Karmaşık Sayıların Üssünü Alma ve Euler'in Formülü
 
 ### Gerçek Sayının Sanal Kuvveti
@@ -282,19 +176,6 @@ Euler formülünü kullanırsak:
 
 $$e^{a + bi} = e^a \cdot (\cos b + i \sin b)$$
 
-```qsharp
-namespace Complex {
-    open Std.Math;
-
-    function ComplexExponent(x : Complex) : Complex {
-        return Complex(
-            E()^x.Real * Cos(x.Imag),
-            E()^x.Real * Sin(x.Imag)
-        );
-    }
-}
-```
-
 ## Karmaşık Kuvvet: $r^{a + bi}$
 
 Gerçek sayının karmaşık üssünü alabilmek için logaritma ve Euler formülü kullanılabilir
@@ -308,20 +189,6 @@ $$r^a \cdot \cos(b \ln r)$$
 
 Sanal kısmı:
 $$r^a \cdot \sin(b \ln r)i$$
-
-```qsharp
-namespace Complex {
-    function ComplexExpReal(r : Double, x : Complex) : Complex {
-        if AbsD(r) < 1e-9 {
-            return Complex(0., 0.);
-        }
-
-        let ra = r^x.Real;
-        let lnr = Log(r);
-        return Complex(ra * Cos(x.Imag * lnr), ra * Sin(x.Imag * lnr));
-    }
-}
-```
 
 ## Kutupsal Gösterim
 
@@ -367,62 +234,20 @@ Bu gösterim, özellikle çarpma, bölme ve üs alma gibi işlemleri çok daha k
 - **Polar'dan Kartezyene**
   $$z = r \cdot (\cos\theta + i\sin\theta)$$
 
-Q# dilinde polar formdaki karmaşık sayılar, Std.Math isim alanındaki ComplexPolar türü ile temsil edilir.
-
-**Bir karmaşık sayının modülünü ve fazını almak**
-
-```qsharp
-let r = x.Magnitude;
-let theta = x.Argument;
-```
-
-Q# ComplexAsComplexPolar fonksiyonu bu dönüşümü yapmak için kullanılmaktadır. Fakat önceki işlemlerde olduğu gibi burada da eğitim amacıyla bu fonksiyonu kullanmadan yapacağız.
-
-```qsharp
-namespace Complex {
-    function ComplexToComplexPolar(x : Complex) : ComplexPolar {
-        return ComplexPolar(
-            Sqrt(x.Real * x.Real + x.Imag * x.Imag),
-            ArcTan2(x.Imag, x.Real)
-        );
-    }
-}
-```
-
-### Kutupsaldan Kartezyene Dönüşüm
-
-```qsharp
-namespace Complex {
-    function ComplexPolarToComplex(x : ComplexPolar) : Complex {
-        return Complex(
-            x.Magnitude * Cos(x.Argument),
-            x.Magnitude * Sin(x.Argument)
-        );
-    }
-}
-```
-
 ### Kutupsal Formda Çarpma İşlemi
 
 Karmaşık sayılar kutupsal formda çarpılırken modüller çarpılır, açılar toplanır:
 
 $$(r_1 e^{i\theta_1})(r_2 e^{i\theta_2}) = r_1 r_2 e^{i(\theta_1 + \theta_2)}$$
 
-```qsharp
-namespace Complex {
-    function ComplexPolarMult(x : ComplexPolar, y : ComplexPolar) : ComplexPolar {
-        mutable theta = x.Argument + y.Argument;
-        if (theta > PI()) {
-            set theta -= 2.0 * PI();
-        }
-        if (theta <= -PI()) {
-            set theta += 2.0 * PI();
-        }
-        return ComplexPolar(x.Magnitude * y.Magnitude, theta);
-    }
-}
-```
+Bu özellik kuantum mekaniğinde son derece yararlıdır, çünkü kuantum durumları genellikle kutupsal formda karmaşık sayılar olarak temsil edilir.
 
 ## Bunları Neden Öğreniyoruz?
 
-Karmaşık sayılar, kuantum bilişimin temel taşlarından biridir. Kuantum bilgisayarları ve algoritmalarını anlayabilmek için bu tür matematiksel kavramlara aşina olmak gerekir. Evet, bazı kısımlar kafa karıştırıcı olabilir; ancak amacımız bunları ezberlemek değil, mantığını kavramaktır. Bu bölüm ve diğer matematiksel konular zaman zaman sıkıcı gelebilir, ama temel prensipleri anlamak ileride işinizi oldukça kolaylaştıracaktır.
+Karmaşık sayılar, kuantum bilişimin temel taşlarından biridir. Kuantum bilgisayarları ve algoritmalarını anlayabilmek için bu tür matematiksel kavramlara aşina olmak gerekir.
+
+Kuantum mekaniğinde, bir kuantum sisteminin durumu **kuantum genliği** adı verilen karmaşık bir sayı ile tanımlanır. Bu genlikler, sistemin farklı durumlarda ölçülme olasılığını belirler ve az önce öğrendiğimiz matematiksel kuralları takip eder.
+
+Bu karmaşık sayıların fazı (açısı) kuantum sistemlerde fiziksel bir şeyi temsil eder - sadece matematiksel bir soyutlama değildir. Kuantum durumları birbirleriyle girişim yaptığında, girişimin yapıcı mı yoksa yıkıcı mı olacağını belirleyen öğrendiğimiz karmaşık sayı aritmetiğidir.
+
+Bu kavramları derinlemesine anlamak, kuantum bilişim yolculuğunuzu çok daha kolay hale getirecektir. Bazı kısımlar kafa karıştırıcı olabilir, ama amacımız bunları ezberlemek değil, mantığını kavramak ve kuantum dünyasıyla nasıl bağlantı kurduklarını görmektir.
