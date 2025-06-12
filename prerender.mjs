@@ -6,6 +6,39 @@ const distPath = path.resolve(root, 'dist');
 const template = fs.readFileSync(path.resolve(distPath, 'index.html'), 'utf-8');
 const baseUrl = 'https://hint.synerthink.com';
 
+// Function to get episode-specific image
+const getEpisodeImage = (post, pathPrefix) => {
+	// For series posts, try to find episode-specific images
+	if (pathPrefix === 'series') {
+		const id = post.id || post.slug;
+
+		// Map specific episodes to their custom images
+		const episodeImageMap = {
+			'do-aliens-use-computers': 'series-card.png',
+			'imaginary-and-complex-numbers': 'episode-2-card.png',
+			// Add more episodes as needed
+		};
+
+		if (episodeImageMap[id]) {
+			return `${baseUrl}/images/${episodeImageMap[id]}`;
+		}
+
+		// For episodes with part numbers, try to find episode-specific images
+		if (post.part) {
+			const episodeSpecificImage = `episode-${post.part}-card.png`;
+			// Check if the file exists (we could make this more robust with actual file checking)
+			if (post.part === 2) {
+				return `${baseUrl}/images/${episodeSpecificImage}`;
+			}
+		}
+	}
+
+	// Default fallback images
+	return pathPrefix === 'series'
+		? `${baseUrl}/images/series-card.png`
+		: `${baseUrl}/images/series-card.png`; // You might want a different default for blog
+};
+
 // Function to create meta tags
 const createMetaTags = (title, url, imageUrl) => {
 	const frameMetadata = {
@@ -39,7 +72,7 @@ const prerenderPosts = (posts, pathPrefix) => {
 		const id = post.id || post.slug;
 		const title = post.title.en || post.title.tr || post.title;
 		const postUrl = `${baseUrl}/${pathPrefix}/${id}`;
-		const imageUrl = `${baseUrl}/images/series-card.png`; // Using the series card image
+		const imageUrl = getEpisodeImage(post, pathPrefix);
 
 		// Fix asset paths for nested routes
 		// For a path like /series/foo, assets need to be loaded from ../../
@@ -59,7 +92,7 @@ const prerenderPosts = (posts, pathPrefix) => {
 		}
 
 		fs.writeFileSync(path.resolve(dirPath, 'index.html'), html);
-		console.log(`Prerendered: /${pathPrefix}/${id}`);
+		console.log(`Prerendered: /${pathPrefix}/${id} with image: ${imageUrl}`);
 	});
 };
 

@@ -1,6 +1,5 @@
 ---
 title: 'Uzaylılar Bilgisayar Kullanır Mı?'
-date: '2023-05-15T12:00:00.000Z'
 excerpt: 'Bilişimin evrensel doğasını ve evrendeki gelişmiş uygarlıkların neden büyük olasılıkla bilgisayarları keşfetmiş olabileceğini inceliyoruz.'
 author: 'Adem'
 part: 1

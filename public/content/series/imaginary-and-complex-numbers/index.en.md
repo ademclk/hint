@@ -1,6 +1,5 @@
 ---
 title: 'Imaginary and Complex Numbers'
-date: '2023-06-15T12:00:00.000Z'
 excerpt: 'Exploring the mathematical concepts behind quantum computing.'
 author: 'Adem'
 part: 2

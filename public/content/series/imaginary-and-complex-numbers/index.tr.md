@@ -1,6 +1,5 @@
 ---
 title: 'Sanal ve Karmaşık Sayılar'
-date: '2023-06-15T12:00:00.000Z'
 excerpt: 'Kuantum bilişimin temelindeki matematiksel kavramları inceliyoruz.'
 author: 'Adem'
 part: 2

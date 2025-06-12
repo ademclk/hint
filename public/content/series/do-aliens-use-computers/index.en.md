@@ -1,6 +1,5 @@
 ---
 title: 'Do Aliens Use Computers?'
-date: '2023-05-15T12:00:00.000Z'
 excerpt: 'Exploring the universal nature of computation and why advanced civilizations across the universe would likely discover computers.'
 author: 'Adem'
 part: 1
