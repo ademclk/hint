@@ -240,3 +240,34 @@
 		}
 	}
 }
+
+/* Math expressions and horizontal rule styling */
+.markdown-content hr {
+	margin: 2rem 0;
+	border: 0;
+	height: 1px;
+	background-color: rgba(var(--border), 0.3);
+}
+
+/* Ensure proper rendering of math in dark mode */
+.dark .markdown-content {
+	color: var(--foreground);
+}
+
+/* KaTeX math expressions inherit theme colors */
+.dark .katex {
+	color: var(--foreground);
+}
+
+.dark .katex .base {
+	color: var(--foreground);
+}
+
+/* Code block styling for dark mode */
+.dark .markdown-content pre {
+	background-color: rgba(var(--muted), 0.3);
+}
+
+.dark .markdown-content code {
+	background-color: rgba(var(--muted), 0.3);
+}

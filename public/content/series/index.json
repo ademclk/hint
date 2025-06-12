@@ -14,5 +14,21 @@
 		"languages": ["en", "tr"],
 		"defaultLanguage": "en",
 		"author": "Adem"
+	},
+	{
+		"id": "imaginary-and-complex-numbers",
+		"title": {
+			"en": "Imaginary and Complex Numbers",
+			"tr": "Sanal ve Karmaşık Sayılar"
+		},
+		"part": 2,
+		"date": "2023-06-15T12:00:00.000Z",
+		"excerpt": {
+			"en": "Examining the mathematical concepts underpinning quantum computation and how they are implemented in Q# language.",
+			"tr": "Kuantum hesaplamanın temelindeki matematiksel kavramları ve Q# dilinde nasıl uygulandıklarını inceliyoruz."
+		},
+		"languages": ["en", "tr"],
+		"defaultLanguage": "en",
+		"author": "Adem"
 	}
 ]

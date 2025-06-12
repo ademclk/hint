@@ -100,47 +100,72 @@ export function parseFrontmatter(markdown: string): { frontmatter: Record<string
 export function convertMarkdownToHTML(markdown: string) {
     if (!markdown) return '';
 
-    // Process markdown into HTML with proper handling of all elements
-    let html = markdown
-        // Images - process these first to not interfere with other formatting
-        .replace(/!\[(.*?)\]\((.*?)\)/g, '<div class="my-8"><img src="$2" alt="$1" class="rounded-lg shadow-md mx-auto max-w-full" /></div>')
+    // Split content into blocks (separated by double newlines)
+    const blocks = markdown.split(/\n\n+/);
 
-        // Headers
-        .replace(/^# (.*$)/gm, '<h1 class="text-3xl font-bold mt-8 mb-4">$1</h1>')
-        .replace(/^## (.*$)/gm, '<h2 class="text-2xl font-semibold mt-6 mb-3">$1</h2>')
-        .replace(/^### (.*$)/gm, '<h3 class="text-xl font-medium mt-5 mb-2">$1</h3>')
-
-        // Bold and italic
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-
-        // Lists
-        .replace(/^\- (.*$)/gm, '<li class="ml-4 mb-1">$1</li>')
-        .replace(/<\/li>\n<li/g, '</li>\n<li')
-        .replace(/(<li.*<\/li>)/s, '<ul class="my-4">$1</ul>')
-
-        // Blockquotes
-        .replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-primary/30 pl-4 py-1 my-4 text-muted-foreground italic">$1</blockquote>')
+    const processedBlocks = blocks.map(block => {
+        const trimmedBlock = block.trim();
+        if (!trimmedBlock) return '';
 
         // Code blocks
-        .replace(/```([\s\S]*?)```/g, '<pre class="bg-muted/30 p-4 rounded-md overflow-x-auto my-4"><code>$1</code></pre>')
+        if (trimmedBlock.startsWith('```') && trimmedBlock.endsWith('```')) {
+            const codeContent = trimmedBlock.slice(3, -3).trim();
+            const lines = codeContent.split('\n');
+            const language = lines[0].trim();
+            const code = lines.slice(1).join('\n');
+            return `<pre class="bg-muted/30 p-4 rounded-md overflow-x-auto my-4"><code>${code || codeContent}</code></pre>`;
+        }
 
-        // Inline code
-        .replace(/`([^`]+)`/g, '<code class="bg-muted/30 px-1 py-0.5 rounded text-sm">$1</code>')
+        // Headers
+        if (trimmedBlock.startsWith('# ')) {
+            return `<h1 class="text-3xl font-bold mt-8 mb-4">${trimmedBlock.slice(2)}</h1>`;
+        }
+        if (trimmedBlock.startsWith('## ')) {
+            return `<h2 class="text-2xl font-semibold mt-6 mb-3">${trimmedBlock.slice(3)}</h2>`;
+        }
+        if (trimmedBlock.startsWith('### ')) {
+            return `<h3 class="text-xl font-medium mt-5 mb-2">${trimmedBlock.slice(4)}</h3>`;
+        }
 
-        // Line breaks
-        .replace(/\n\n/g, '</p><p class="my-4">')
+        // Horizontal rule
+        if (trimmedBlock === '---') {
+            return '<hr class="my-8 border-t border-border/30" />';
+        }
 
-        // Initial paragraph wrap
-        .replace(/^([^<].*)/gm, function (match) {
-            // Only wrap in <p> if it's not already wrapped in another HTML tag
-            if (!match.startsWith('<')) {
-                return '<p class="my-4">' + match;
-            }
-            return match;
-        });
+        // Lists
+        if (trimmedBlock.includes('\n- ') || trimmedBlock.startsWith('- ')) {
+            const listItems = trimmedBlock.split('\n').filter(line => line.startsWith('- '));
+            const processedItems = listItems.map(item => {
+                const content = item.slice(2).trim();
+                const processed = processInlineFormatting(content);
+                return `<li class="ml-4 mb-1">${processed}</li>`;
+            });
+            return `<ul class="my-4">${processedItems.join('')}</ul>`;
+        }
 
-    // Final cleanup for any unwrapped paragraphs or stray tags
-    html = '<div class="prose-content">' + html + '</div>';
-    return html;
+        // Blockquotes
+        if (trimmedBlock.startsWith('> ')) {
+            const content = trimmedBlock.slice(2);
+            return `<blockquote class="border-l-4 border-primary/30 pl-4 py-1 my-4 text-muted-foreground italic">${content}</blockquote>`;
+        }
+
+        // Regular paragraph - combine all lines into one, separated by spaces
+        const paragraphContent = trimmedBlock.replace(/\n/g, ' ');
+        const processed = processInlineFormatting(paragraphContent);
+        return `<p class="my-4">${processed}</p>`;
+    });
+
+    function processInlineFormatting(text: string): string {
+        return text
+            // Images
+            .replace(/!\[(.*?)\]\((.*?)\)/g, '<div class="my-8"><img src="$2" alt="$1" class="rounded-lg shadow-md mx-auto max-w-full" /></div>')
+            // Bold and italic
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            // Inline code
+            .replace(/`([^`]+)`/g, '<code class="bg-muted/30 px-1 py-0.5 rounded text-sm">$1</code>');
+    }
+
+    const html = processedBlocks.filter(block => block).join('\n');
+    return `<div class="prose-content">${html}</div>`;
 } 

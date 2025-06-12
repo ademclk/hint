@@ -2,8 +2,9 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { SeriesTitleCard } from '@/components/SeriesTitleCard';
 import { FarcasterFrame } from '@/components/FarcasterFrame';
-import { SeriesEntry, loadSeriesIndex, loadSeriesContent, parseFrontmatter, convertMarkdownToHTML, getLocalizedContent } from '@/utils/contentLoader';
+import { SeriesEntry, loadSeriesIndex, loadSeriesContent, parseFrontmatter, getLocalizedContent } from '@/utils/contentLoader';
 import { FARCASTER_APP_ID, FARCASTER_APP_SLUG } from '@/utils/farcasterConfig';
+import MathRenderer from '@/components/MathRenderer';
 
 interface Language {
     code: string;
@@ -145,21 +146,24 @@ export default function SeriesPost() {
     // Load content when language changes
     useEffect(() => {
         async function loadContentForLanguage() {
-            if (!id || loading) return;
-
             try {
                 const markdownContent = await loadSeriesContent(id, currentLanguage);
 
                 if (!markdownContent) {
-                    console.error(`Content not available for language: ${currentLanguage}`);
+                    setError('Content not found');
+                    setLoading(false);
                     return;
                 }
 
-                // Parse the markdown content
+                // Parse the markdown content - just get the raw content without HTML conversion
                 const { content } = parseFrontmatter(markdownContent);
                 setContent(content);
+
             } catch (error) {
-                console.error(`Error loading content for language ${currentLanguage}:`, error);
+                console.error('Error loading content:', error);
+                setError('Failed to load content');
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -301,10 +305,7 @@ export default function SeriesPost() {
 
                     {/* Markdown content with improved formatting */}
                     <div className="prose prose-lg dark:prose-invert max-w-none">
-                        <div
-                            dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(content) }}
-                            className="markdown-content space-y-4"
-                        />
+                        <MathRenderer content={content} />
                     </div>
 
                     {/* Farcaster Frame */}
